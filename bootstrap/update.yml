@@ -1,0 +1,44 @@
+---
+- name: Boot to firmware update
+  hosts: lab
+  become: false
+  gather_facts: false
+  vars:
+    ansible_python_interpreter: "/usr/bin/env python"
+
+  pre_tasks:
+  - name: Gather local facts
+    connection: local
+    run_once: yes
+    delegate_to: localhost
+    setup:
+
+  - name: Check existing baremetal update image
+    connection: local
+    register: memtest_image
+    stat:
+      path: "{{ playbook_dir }}/images/update.iso"
+
+  - name: Serve the images folder on port 8080
+    run_once: yes
+    delegate_to: localhost
+    docker_container:
+      name: serve_baremetal_image
+      image: nginx
+      state: started
+      auto_remove: yes
+      keep_volumes: no
+      volumes:
+        - "{{ playbook_dir }}/images:/usr/share/nginx/html:ro"
+      ports:
+        - "0.0.0.0:8080:80"
+
+  - name: Boot systems using the ISO
+    delegate_to: localhost
+    hpilo_boot:
+      force: true
+      host: "{{ ilo_address }}"
+      login: "{{ ilo_username }}"
+      password: "{{ ilo_password }}"
+      media: cdrom
+      image: "http://{{ ansible_default_ipv4.address }}:8080/update.iso"

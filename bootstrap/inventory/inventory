@@ -1,0 +1,4 @@
+[lab]
+10.10.10.80 hostname=pve-0 ilo_address=10.10.1.90 ilo_password=99999999 cluster_address=10.10.30.1 storage_address=10.10.20.1
+10.10.10.81 hostname=pve-1 ilo_address=10.10.1.91 ilo_password=99999999 cluster_address=10.10.30.2 storage_address=10.10.20.2
+10.10.10.82 hostname=pve-2 ilo_address=10.10.1.92 ilo_password=99999999 cluster_address=10.10.30.3 storage_address=10.10.20.3

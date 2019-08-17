@@ -1,0 +1,5 @@
+---
+ilo_username: Administrator
+domain: homelab.local
+pve_cluster_name: labcluster
+storage_network: 10.10.20.0/24

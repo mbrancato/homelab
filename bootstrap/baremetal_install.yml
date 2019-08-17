@@ -1,0 +1,83 @@
+---
+- name: Do baremetal installation
+  hosts: lab
+  become: false
+  gather_facts: false
+  vars:
+    debian_base_iso: debian-9.9.0-amd64-netinst.iso
+    ansible_python_interpreter: "/usr/bin/env python"
+
+  pre_tasks:
+  - name: Gather local facts
+    run_once: yes
+    delegate_to: localhost
+    setup:
+
+  - name: Check existing baremetal installer image
+    run_once: yes
+    delegate_to: localhost
+    stat:
+      path: "{{ playbook_dir }}/images/debian.iso"
+    register: installer_image
+
+  - name: Download the base image
+    run_once: yes
+    delegate_to: localhost
+    when: installer_image.stat.exists == false
+    get_url:
+      url: https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/{{ debian_base_iso }}
+      dest: /tmp/{{ debian_base_iso }}
+      mode: '0440'
+
+  - name: Build baremetal unattended install image
+    run_once: yes
+    delegate_to: localhost
+    when: installer_image.stat.exists == false
+    docker_container:
+      name: build_baremetal_image
+      image: debian:buster
+      command: bash /files/files/modify_initrd.sh
+      state: started
+      auto_remove: yes
+      keep_volumes: yes
+      volumes:
+        - "{{ playbook_dir }}:/files"
+        - "/tmp/{{ debian_base_iso }}:/debian.iso"
+
+  - name: Wait for baremetal image build
+    run_once: yes
+    delegate_to: localhost
+    when: installer_image.stat.exists == false
+    register: baremetal_complete
+    until: baremetal_complete is successful
+    retries: 5
+    delay: 5
+    docker_container:
+      name: build_baremetal_image
+      image: debian:buster
+      command: bash /files/files/modify_initrd.sh
+      state: stopped
+
+  - name: Serve the images folder on port 8080
+    run_once: yes
+    delegate_to: localhost
+    docker_container:
+      name: serve_baremetal_image
+      image: nginx
+      state: started
+      auto_remove: yes
+      keep_volumes: no
+      volumes:
+        - "{{ playbook_dir }}/images:/usr/share/nginx/html:ro"
+      ports:
+        - "0.0.0.0:8080:80"
+
+  - name: Boot systems using the ISO
+    delegate_to: localhost
+    hpilo_boot:
+      force: true
+      host: "{{ ilo_address }}"
+      login: "{{ ilo_username }}"
+      password: "{{ ilo_password }}"
+      media: cdrom
+      image: "http://{{ ansible_default_ipv4.address }}:8080/debian.iso"

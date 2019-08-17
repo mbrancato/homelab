@@ -1,0 +1,5 @@
+*.DS_Store
+*.iso
+bootstrap/lab/*
+**/Pipfile*
+**/package-lock.json

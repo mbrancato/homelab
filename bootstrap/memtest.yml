@@ -1,0 +1,65 @@
+---
+- name: Boot to memory test
+  hosts: lab
+  become: false
+  gather_facts: false
+  vars:
+    ansible_python_interpreter: "/usr/bin/env python"
+
+  pre_tasks:
+  - name: Gather local facts
+    run_once: yes
+    delegate_to: localhost
+    setup:
+
+  - name: Check existing baremetal installer image
+    run_once: yes
+    delegate_to: localhost
+    register: memtest_image
+    stat:
+      path: "{{ playbook_dir }}/images/memtest86.iso"
+
+  - name: Download the image
+    when: memtest_image.stat.exists == false
+    run_once: yes
+    delegate_to: localhost
+    get_url:
+      url: "https://www.memtest86.com/downloads/memtest86-4.3.7-iso.tar.gz"
+      dest: "{{ playbook_dir }}/images/memtest86.tar.gz"
+      mode: '0440'
+
+  - name: Extract memtest86 ISO
+    when: memtest_image.stat.exists == false
+    run_once: yes
+    delegate_to: localhost
+    shell: "tar -C {{ playbook_dir }}/images/ -xzvf {{ playbook_dir }}/images/memtest86.tar.gz"
+
+  - name: Rename the ISO
+    when: memtest_image.stat.exists == false
+    run_once: yes
+    delegate_to: localhost
+    shell: "mv {{ playbook_dir }}/images/Memtest*iso {{ playbook_dir }}/images/memtest86.iso"
+
+  - name: Serve the images folder on port 8080
+    run_once: yes
+    delegate_to: localhost
+    docker_container:
+      name: serve_baremetal_image
+      image: nginx
+      state: started
+      auto_remove: yes
+      keep_volumes: no
+      volumes:
+        - "{{ playbook_dir }}/images:/usr/share/nginx/html:ro"
+      ports:
+        - "0.0.0.0:8080:80"
+
+  - name: Boot systems using the ISO
+    delegate_to: localhost
+    hpilo_boot:
+      force: true
+      host: "{{ ilo_address }}"
+      login: "{{ ilo_username }}"
+      password: "{{ ilo_password }}"
+      media: cdrom
+      image: "http://{{ ansible_default_ipv4.address }}:8080/memtest86.iso"

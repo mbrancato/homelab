@@ -1,0 +1,63 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+auto ens2f0
+iface ens2f0 inet manual
+    bridge-vids 20 30
+    bridge-allow-untagged no
+
+auto ens2f1
+iface ens2f1 inet manual
+    bridge-vids 20 30
+    bridge-allow-untagged no
+
+auto bond
+iface bond inet manual
+    bond-mode 802.3ad
+    bond-slaves eno1 eno2 eno3 eno4
+    bridge-vids 1 4 10 60 70 90
+    bridge-allow-untagged no
+
+auto vmbr0
+iface vmbr0 inet manual
+    bridge-stp on
+    bridge-vids 1 4 10 60 70 90
+    bridge-vlan-aware yes
+    bridge-ports bond
+    bridge-mcquerier 1
+    bridge-mcsnoop 0
+    bridge-allow-untagged no
+
+auto vmbr0.10
+iface vmbr0.10 inet static
+    address {{ ansible_default_ipv4.address }}
+    netmask {{ ansible_default_ipv4.netmask }}
+    gateway {{ ansible_default_ipv4.gateway }}
+
+auto br1
+iface br1 inet manual
+    bridge-stp on
+    bridge-vids 20 30
+    bridge-vlan-aware yes
+    bridge-ports ens2f0 ens2f1
+    bridge-mcquerier 1
+    bridge-mcsnoop 0
+    bridge-allow-untagged no
+
+auto storage
+iface storage inet static
+    vlan-id 20
+    vlan-raw-device br1
+    address {{ storage_address }}/24
+
+auto cluster
+iface cluster inet static
+    vlan-id 30
+    vlan-raw-device br1
+    address {{ cluster_address }}/24

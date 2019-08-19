@@ -7,7 +7,7 @@ This repo holds the description and code used to build my home lab.
 
 ## Summary
 
-The current setup uses 3 HP DL360e Gen8 servers, a virtualized network gateway / firewall running Sophos XG, an LXC container doing DNS over HTTPS using cloudflared. Additionally, I have a number of VMs for testing and internal services.
+The current setup uses 3 HP DL360e Gen8 servers, a virtualized network gateway / firewall running [OPNsense](https://opnsense.org/), an LXC container doing DNS over HTTPS using [cloudflared](https://github.com/cloudflare/cloudflared). Additionally, I have a number of VMs for testing and internal services.
 
 My previous setup was using almost 770W of energy in an idle state. The operating costs were high and I wanted to reduce this while also improving my existing setup. The main goals were:
 
@@ -15,11 +15,19 @@ My previous setup was using almost 770W of energy in an idle state. The operatin
 - Maintain local data redundancy (disk or block mirroring)
 - Enable high-availability by reducing single points of failure
 
-I have high hopes that my operating cost reductions can pay for the new hardware in about 3 years.
-
 For more information, see my [previous setup](#previous-setup).
 
 This repo and implementation is inspired by [Brad's Homelab](https://github.com/bradfitz/homelab).
+
+### Energy Usage
+
+|   | Previous | Current | Savings |
+|---|---|---|---|
+| Avg. Power | 770 W | 550 W | 220 W |
+| Annual Energy | 6745 kWh | 4818 kWh | 1927 kWh |
+| Annual Cost | $613.80 | $438.44 | **$175.36** |
+
+I have high hopes that my operating cost reductions can pay for the new hardware in about 3 years. My current energy rate is very low at 9.1 cents per kWh making recouping expenses in new hardware a challenge.
 
 ## Hardware
 
@@ -38,6 +46,7 @@ The operating system is installed on the M.2 SATA SSD. In order to boot to the o
 **Network**
 
 - HP ProCurve J9021A 2810-24G
+  - Version N.11.78
   - 24 gigabit ports
 - 2x Ubiquiti Networks UniFI UAP-AC-PRO-US
   - 802.11 a/b/g/n/ac 2.4Ghz / 5GHz
@@ -64,13 +73,36 @@ The two APs cover my 2-story house with a basement well with one unit mounted on
 
 This system is my home NAS and previously hosted all VM images and an SMB file share used to store photos and documents. It is still used for SMB but will be transitioned away at some point.
 
+## Network
+
+The network is made up of several VLANs.
+
+- VLAN 1 - HOME - Unused / management
+- VLAN 4 - GUESTS - Wireless guests
+- VLAN 10 - GENERAL - General purpose LAN
+- VLAN 20 - STORAGE - SAN / Ceph traffic
+- VLAN 30 - PVECLUSTER - Proxmox VE / corosync
+- VLAN 60 - CAMERAS - IP cameras
+- VLAN 70 - EDGE - Internet edge
+- VLAN 90 - DEVICES - Devices / IoT
+
 ## Software
 
-- Debian 9
+- Debian 10 Buster
   - Proxmox VE 5.x
-    - Ceph
+  - Ceph
 
-Currently, VMs are built on the Proxmox VE cluster.
+### Virtual Machines
+
+**Network Gateway**
+
+- OPNsense 19.7
+  - 4 vCPU
+  - 4GB memory
+  - 1x 32GB ATA Block Device
+  - 4x VirtIO Network Interface
+
+I originally tried running Sophos XG Home Edition (free), but didn't like it after using it a couple months.
 
 ## Previous Setup
 

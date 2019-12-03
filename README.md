@@ -29,12 +29,25 @@ This repo and implementation is inspired by [Brad's Homelab](https://github.com/
 
 I have high hopes that my operating cost reductions can pay for the new hardware in about 3 years. My current energy rate is very low at 9.1 cents per kWh making recouping expenses in new hardware a challenge.
 
+
+Approximate device power consumption:
+
+| Device | Quantity | Power | Total |
+|---|:---:|---|---|
+| ProCurve J9021A | 1 | 40 W | 40 W |
+| UniFI UAP-AC-PRO-US | 2 | 5 W | 10 W |
+| Supermicro 2U server | 1 | 247 W | 247 W |
+| HP DL360e Gen8 | 3 | 85 W | 255 W |
+
+There were measured with a Kill-A-Watt (accurate) and by monitoring the UPS power output display (approximate).
+
 ## Hardware
 
 **Servers**
 
 - 3x HP DL360e Gen8
   - 2x Intel Xeon E5-2407 (8 cores @ 2.2GHz)
+  - 2x 750 W power supplies
   - 24GB of memory
   - 4x gigabit NICs
   - Emulex / HP NC552SFP 8x PCIe 10Gb 2-port SFP+ adapter
@@ -63,15 +76,27 @@ The two APs cover my 2-story house with a basement well with one unit mounted on
 
 **Network Attached Storage**
 
-- Supermicro SC826 2U chassis with SAS-826A backplane
+- Supermicro 2U server
   - FreeNAS 11.1
+  - SC826 2U chassis
+  - X8DTN+ motherboard
+  - SAS-826A backplane
+  - 2x 800 W power supplies
   - 2x Intel Xeon L5620 CPUs (8 cores @ 2.13GHz)
   - 24GB of memory
   - 32GB M.2 SATA SSD (boot drive)
-  - SAS-826A backplane
   - 2x Seagate ST6000NM0034 6TB 7200 RPM SAS drives in ZFS mirror
 
 This system is my home NAS and previously hosted all VM images and an SMB file share used to store photos and documents. It is still used for SMB but will be transitioned away at some point.
+
+**UPS**
+
+- CyberPower OR2200PFCRT2U
+  - 2000 VA
+  - 1540 W
+  - Active power factor correction
+  - 2× NEMA 5-20R
+  - 6× NEMA 5-15R
 
 ## Network
 

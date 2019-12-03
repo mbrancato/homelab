@@ -39,7 +39,7 @@ Approximate device power consumption:
 | Supermicro 2U server | 1 | 247 W | 247 W |
 | HP DL360e Gen8 | 3 | 85 W | 255 W |
 
-There were measured with a Kill-A-Watt (accurate) and by monitoring the UPS power output display (approximate).
+These were measured with a Kill-A-Watt (accurate) and by monitoring the UPS power output display (approximate).
 
 ## Hardware
 

@@ -1,0 +1,9 @@
+---
+wifi_interface: wlan0
+wifi_channel: 11
+wifi_ssid: IOT
+wifi_password: SuperSecret
+wifi_address: 172.16.2.1
+wifi_netmask: 255.255.255.0
+wifi_dhcp_range_start: 172.16.2.6
+wifi_dhcp_range_end: 172.16.2.200

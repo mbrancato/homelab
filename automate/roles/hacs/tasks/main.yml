@@ -1,0 +1,31 @@
+- name: Get Home Assistant user info
+  getent:
+    database: passwd
+    key: "{{ hass_user }}"
+  register: userinfo
+
+- name: Ensure custom components folder exists
+  file:
+    path: "{{ hass_config_dir }}/custom_components/"
+    state: directory
+    owner: "{{ hass_user }}"
+    group: "{{ hass_group }}"
+
+- name: Ensure HACS folder exists
+  file:
+    path: "{{ hass_config_dir }}/custom_components/hacs/"
+    state: directory
+    owner: "{{ hass_user }}"
+    group: "{{ hass_group }}"
+
+- name: Download HACS
+  get_url:
+    url: "https://github.com/hacs/integration/releases/download/{{ hacs_version }}/hacs.zip"
+    dest: /tmp/hacs.zip
+    force_basic_auth: yes
+
+- name: Extract HACS
+  unarchive:
+    src: /tmp/hacs.zip
+    dest: "{{ hass_config_dir }}/custom_components/hacs/"
+    remote_src: yes

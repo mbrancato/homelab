@@ -1,0 +1,9 @@
+# WiFi interface config
+auto {{wifi_interface}}
+iface {{wifi_interface}} inet static
+  address {{wifi_address}}
+  netmask {{wifi_netmask}}
+  wireless-mode Master
+  wireless-channel {{wifi_channel}}
+  wireless-essid {{wifi_ssid}}
+  post-up ip route add 255.255.255.255 dev {{wifi_interface}}

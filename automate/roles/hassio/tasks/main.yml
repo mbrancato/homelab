@@ -1,0 +1,62 @@
+- name: Update Raspbian
+  apt:
+    update_cache: yes
+
+- name: Install required packages
+  apt:
+    install_recommends: no
+    name:
+    - dbus
+    - avahi-daemon
+    - curl
+    - jq
+    - apparmor-utils
+    state: present
+
+- name: Create Hass.io group
+  group:
+    name: hassio
+    system: yes
+
+- name: Create Hass.io user
+  user:
+    name: hassio
+    group: hassio
+    create_home: no
+    shell: /sbin/nologin
+    home: /var/empty
+    system: yes
+  register: hassio_user
+
+- name: Ensure Hass.io folder exists
+  file:
+    path: /var/lib/hassio
+    state: directory
+    owner: "{{ hassio_user.uid }}"
+    group: "{{ hassio_user.group }}"
+
+- name: Run Hass.io supervisor
+  docker_container:
+    name: hassio_supervisor
+    image: "homeassistant/{{ 'armhf' if ansible_machine == 'armv6l' else 'armv7' }}-hassio-supervisor:{{ hassio_version }}"
+    state: started
+    restart: no
+    restart_policy: unless-stopped
+    privileged: yes
+    #user: "{{ hassio_user.uid }}:{{ hassio_user.group }}"
+    env:
+      SUPERVISOR_SHARE: /var/lib/hassio
+      SUPERVISOR_NAME: hassio_supervisor
+      HOMEASSISTANT_REPOSITORY: homeassistant/{{ hass_arch if hass_arch != '' else 'qemuarm' }}-homeassistant
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/dbus:/var/run/dbus
+      - /var/lib/hassio:/data
+    comparisons:
+      image: ignore
+      env: strict
+      volumes: allow_more_present
+    security_opts:
+      - seccomp:unconfined
+      - apparmor:unconfined

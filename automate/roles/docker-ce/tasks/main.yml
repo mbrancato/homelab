@@ -1,0 +1,39 @@
+---
+- name: Ensure older docker packages are removed
+  apt:
+    install_recommends: no
+    name:
+    - docker
+    - docker-engine
+    - docker.io
+    - containerd
+    - runc
+    state: absent
+
+- name: Install Docker GPG key
+  apt_key:
+    url: https://download.docker.com/linux/raspbian/gpg
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    state: present
+
+- name: Add Docker repository
+  apt_repository:
+    repo: "deb [arch={{ 'armhf' if ansible_machine == 'armv7l' else ansible_machine }}] https://download.docker.com/linux/raspbian buster stable"
+    state: present
+
+- name: Update Raspbian
+  apt:
+    update_cache: yes
+    upgrade: yes
+
+- name: Install Docker Community Edition
+  apt:
+    install_recommends: no
+    name:
+    - docker-ce
+    state: present
+
+- name: Install Docker Python modules
+  pip:
+    name:
+    - docker

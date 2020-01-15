@@ -1,0 +1,24 @@
+- name: Update Raspbian
+  apt:
+    update_cache: yes
+
+- name: Install required packages
+  apt:
+    name:
+    - hostapd
+    state: present
+
+- name: Setup networking
+  template:
+    src: wifi_interface.j2
+    dest: /etc/network/interfaces.d/wifi.cfg
+
+- name: Setup hostapd
+  template:
+    src: hostapd.conf.j2
+    dest: /etc/hostapd/hostapd.conf
+
+- name: Enable hostapd
+  shell: |
+    systemctl enable hostapd
+    systemctl unmask hostapd

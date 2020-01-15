@@ -1,0 +1,33 @@
+- name: Set hostname
+  hostname:
+    name: '{{ hostname }}'
+
+- name: Update Raspbian
+  apt:
+    update_cache: yes
+    upgrade: yes
+
+- name: Install required packages
+  apt:
+    name:
+    - apt-transport-https
+    - ca-certificates
+    - unattended-upgrades
+    - python3-setuptools
+    - python3-pip
+    state: present
+
+- name: Setup network interfaces
+  copy:
+    src: interfaces
+    dest: /etc/network/interfaces
+
+- name: Setup loopback
+  copy:
+    src: lo.cfg
+    dest: /etc/network/interfaces.d/lo.cfg
+
+- name: Setup eth0
+  copy:
+    src: eth0.cfg
+    dest: /etc/network/interfaces.d/eth0.cfg

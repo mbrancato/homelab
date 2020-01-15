@@ -1,0 +1,5 @@
+---
+hacs_version: '0.17.0'
+hass_config_dir: /var/lib/homeassistant/config/
+hass_user: homeassistant
+hass_group: "{{ hass_user }}"

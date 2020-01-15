@@ -1,0 +1,4 @@
+---
+hass_config_dir: /var/lib/homeassistant/config/
+hass_user: homeassistant
+hass_group: "{{ hass_user }}"

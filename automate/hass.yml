@@ -1,0 +1,23 @@
+---
+- name: Home Assitant Setup
+  hosts: hass
+  become: true
+  gather_facts: true
+  vars:
+    ansible_python_interpreter: "/usr/bin/env python3"
+  roles:
+  - base_setup_pi
+  - access_point
+  - docker-ce
+  - role: hassio
+    vars:
+      hassio_version: '193'
+      hass_arch: raspberrypi4
+  - role: hacs
+    vars:
+      hass_config_dir: /var/lib/hassio/homeassistant/
+      hass_user: hassio
+  - role: tileboard
+    vars:
+      hass_config_dir: /var/lib/hassio/homeassistant/
+      hass_user: hassio

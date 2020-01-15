@@ -1,0 +1,17 @@
+- name: Install required packages
+  apt:
+    name:
+    - git
+    state: present
+
+- name: Ensure tileboard folder exists
+  file:
+    path: "{{ hass_config_dir }}/www/tileboard/"
+    state: directory
+    owner: "{{ hass_user }}"
+    group: "{{ hass_group }}"
+
+- name: Install tileboard
+  git:
+    repo: 'https://github.com/resoai/TileBoard'
+    dest: "{{ hass_config_dir }}/www/tileboard/"

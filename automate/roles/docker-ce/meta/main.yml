@@ -1,0 +1,3 @@
+---
+dependencies:
+  - role: base_setup_pi

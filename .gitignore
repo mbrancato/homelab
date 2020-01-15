@@ -1,5 +1,8 @@
 *.DS_Store
 *.iso
+*.key
+*.crt
 bootstrap/lab/*
+automate/lab/*
 **/Pipfile*
 **/package-lock.json

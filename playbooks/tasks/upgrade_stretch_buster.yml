@@ -1,0 +1,31 @@
+---
+- name: Upgrade to Buster
+  hosts: lab
+  become: true
+  gather_facts: true
+  vars:
+    ansible_python_interpreter: "/usr/bin/env python"
+
+  tasks:
+  - name: Add apt sources
+    copy:
+      content: |
+        deb http://http.us.debian.org/debian buster main non-free contrib
+        deb-src http://http.us.debian.org/debian buster main non-free contrib
+
+        deb http://security.debian.org/debian-security buster/updates main contrib non-free
+        deb-src http://security.debian.org/debian-security buster/updates main contrib non-free
+
+        deb http://http.us.debian.org/debian buster-updates main contrib non-free
+        deb-src http://http.us.debian.org/debian buster-updates main contrib non-free
+      dest: /etc/apt/sources.list
+
+  - name: Upgrade packages
+    apt:
+      upgrade: yes
+      update_cache: yes
+
+  - name: Full upgrade
+    apt:
+      upgrade: full
+      autoremove: yes

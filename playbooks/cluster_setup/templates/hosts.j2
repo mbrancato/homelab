@@ -5,6 +5,6 @@
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 {{ ansible_default_ipv4.address }} {{ hostname }}.{{ domain }} {{ hostname }}
-{% for node in groups['all'] %}
-{{ hostvars[node].cluster_address }} {{ hostvars[node].hostname }}-pve.{{ hostvars[node].domain }} {{ hostvars[node].hostname }}-pve
+{% for node in groups['lab'] %}
+{{ hostvars[node]['ansible_default_ipv4']['address'] }} {{ hostvars[node].hostname }}.{{ hostvars[node].domain }} {{ hostvars[node].hostname }}
 {% endfor %}

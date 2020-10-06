@@ -1,0 +1,52 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unifi-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: rook-ceph-block-slow
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: unifi
+  name: unifi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: unifi
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        v1.multus-cni.io/default-network: '[{"mac":"ca:b8:b9:05:79:f5","name":"general-vlan-static","namespace":"kube-system","ips":["10.47.10.14/24"]}]'
+      creationTimestamp: null
+      labels:
+        app: unifi
+    spec:
+      volumes:
+        - name: unifi-storage
+          persistentVolumeClaim:
+            claimName: unifi-pvc
+      dnsPolicy: "None"
+      dnsConfig:
+        searches:
+          - "otacnarb.local"
+        nameservers:
+          - "10.47.10.1"
+      containers:
+      - image: jacobalberty/unifi@sha256:af5c0e88a0f08377d5bd17750d16bb7b90ca47060d7eec254312b0dd7ebd293a
+        name: unifi
+        resources: {}
+        volumeMounts:
+          - mountPath: "/unifi"
+            name: unifi-storage

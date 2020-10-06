@@ -1,0 +1,7 @@
+---
+- name: kubeadm
+  src: https://github.com/mbrancato/ansible-role-kubeadm
+- name: kubevirt
+  src: https://github.com/mbrancato/ansible-role-kubevirt
+- name: haproxy
+  src: https://github.com/mbrancato/ansible-role-haproxy

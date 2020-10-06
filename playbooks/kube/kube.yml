@@ -20,17 +20,6 @@
   gather_facts: true
   vars:
     ansible_python_interpreter: "/usr/bin/env python3"
-    etcd_endpoints: >-
-      {{
-        ["https://"]
-        |product(hostvars[inventory_hostname].groups.all)
-        |map("join")
-        |list
-        |product([":2379"])
-        |map("join")
-        |list
-        | join(",")
-      }}
 
   roles:
   - name: cluster-base

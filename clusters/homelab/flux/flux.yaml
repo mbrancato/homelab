@@ -179,7 +179,7 @@ spec:
           - --memcached-hostname=flux-memcached
           - --sync-state=git
           - --memcached-service=
-          - --git-url=git@github.com:mbrancato/homelab-test
+          - --git-url=git@github.com:mbrancato/homelab
           - --git-branch=master
           - --git-path=clusters/homelab
           - --git-readonly=true

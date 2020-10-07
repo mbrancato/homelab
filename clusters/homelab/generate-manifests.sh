@@ -12,7 +12,7 @@ helm template flux fluxcd/flux \
    --set git.readonly=true \
    --set git.user=${GITHUB_USER} \
    --set git.email=${GITHUB_USER}@users.noreply.github.com \
-   --set git.url=git@github.com:${GITHUB_USER}/homelab-test \
+   --set git.url=git@github.com:${GITHUB_USER}/homelab \
    --set git.path="clusters/homelab" \
    --set syncGarbageCollection.enabled=true \
    --set registry.disableScanning=true \

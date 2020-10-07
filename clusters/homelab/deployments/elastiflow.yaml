@@ -1,0 +1,140 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: elastiflow
+  name: elastiflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elastiflow
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: elastiflow
+    spec:
+      volumes:
+      - name: elastiflow-es-certs
+        secret:
+          secretName: elasticsearch-es-http-certs-public
+      - name: elastiflow-es-output
+        configMap:
+          name: elastiflow-es-output
+      containers:
+      - image: robcowart/elastiflow-logstash:4.0.1
+        name: elastiflow
+        resources:
+          limits:
+            memory: 4Gi
+          requests:
+            memory: 4Gi
+        volumeMounts:
+        - name: elastiflow-es-output
+          mountPath: "/etc/logstash/elastiflow/conf.d/"
+          readOnly: true
+        - name: elastiflow-es-certs
+          mountPath: "/etc/logstash/certs/"
+          readOnly: true
+        env:
+          - name: LS_JAVA_OPTS
+            value: '-Xms4g -Xmx4g'
+
+          # ElastiFlow global configuration
+          - name: ELASTIFLOW_AGENT_ID
+            value: elastiflow
+          - name: ELASTIFLOW_GEOIP_CACHE_SIZE
+            value: '16384'
+          - name: ELASTIFLOW_GEOIP_LOOKUP
+            value: 'true'
+          - name: ELASTIFLOW_ASN_LOOKUP
+            value: 'true'
+          - name: ELASTIFLOW_OUI_LOOKUP
+            value: 'false'
+          - name: ELASTIFLOW_POPULATE_LOGS
+            value: 'true'
+          - name: ELASTIFLOW_KEEP_ORIG_DATA
+            value: 'true'
+          - name: ELASTIFLOW_DEFAULT_APPID_SRCTYPE
+            value: '__UNKNOWN'
+
+          # Name resolution option
+          - name: ELASTIFLOW_RESOLVE_IP2HOST
+            value: 'false'
+          - name: ELASTIFLOW_NAMESERVER
+            value: '127.0.0.1'
+          - name: ELASTIFLOW_DNS_HIT_CACHE_SIZE
+            value: '25000'
+          - name: ELASTIFLOW_DNS_HIT_CACHE_TTL
+            value: '900'
+          - name: ELASTIFLOW_DNS_FAILED_CACHE_SIZE
+            value: '75000'
+          - name: ELASTIFLOW_DNS_FAILED_CACHE_TTL
+            value: '3600'
+
+          - name: ELASTIFLOW_ES_HOST
+            value: 'https://elasticsearch-es-http:9200'
+          - name: ELASTIFLOW_ES_SSL_ENABLE
+            value: "true"
+          - name: ELASTIFLOW_ES_SSL_VERIFY
+            value: "false"
+          - name: ELASTIFLOW_ES_USER
+            value: 'elastic'
+          - name: ELASTIFLOW_ES_PASSWD
+            valueFrom:
+              secretKeyRef:
+                name: elasticsearch-es-elastic-user
+                key: elastic
+          - name: ELASTIFLOW_NETFLOW_IPV4_PORT
+            value: '2055'
+          - name: ELASTIFLOW_NETFLOW_UDP_WORKERS
+            value: '2'
+          - name: ELASTIFLOW_NETFLOW_UDP_QUEUE_SIZE
+            value: '4096'
+          - name: ELASTIFLOW_NETFLOW_UDP_RCV_BUFF
+            value: '33554432'
+
+          - name: ELASTIFLOW_SFLOW_IPV4_PORT
+            value: '6343'
+          - name: ELASTIFLOW_SFLOW_UDP_WORKERS
+            value: '2'
+          - name: ELASTIFLOW_SFLOW_UDP_QUEUE_SIZE
+            value: '4096'
+          - name: ELASTIFLOW_SFLOW_UDP_RCV_BUFF
+            value: '33554432'
+
+          - name: ELASTIFLOW_IPFIX_UDP_IPV4_PORT
+            value: '4739'
+          - name: ELASTIFLOW_IPFIX_UDP_WORKERS
+            value: '2'
+          - name: ELASTIFLOW_IPFIX_UDP_QUEUE_SIZE
+            value: '4096'
+          - name: ELASTIFLOW_IPFIX_UDP_RCV_BUFF
+            value: '33554432'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elastiflow
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 10.47.10.93
+  ports:
+  - name: netflow
+    port: 2055
+    protocol: UDP
+    targetPort: 2055
+  - name: sflow
+    port: 6343
+    protocol: UDP
+    targetPort: 6343
+  - name: ipfix
+    port: 4739
+    protocol: UDP
+    targetPort: 4739
+  selector:
+    app: elastiflow
+  sessionAffinity: None

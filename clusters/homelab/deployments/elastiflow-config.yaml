@@ -1,0 +1,1478 @@
+# This config is a workaround for this: https://github.com/robcowart/elastiflow/pull/618
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elastiflow-es-output
+data:
+  10_input_ipfix_ipv4.logstash.conf: "#------------------------------------------------------------------------------\n#
+    Copyright (C)2020 Robert Cowart\n# \n# The contents of this file and/or repository
+    are subject to the Robert Cowart\n# Public License (the \"License\") and may not
+    be used or distributed except in\n# compliance with the License. You may obtain
+    a copy of the License at:\n# \n# http://www.koiossian.com/public/robert_cowart_public_license.txt\n#
+    \n# Software distributed under the License is distributed on an \"AS IS\" basis,\n#
+    WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for\n#
+    the specific language governing rights and limitations under the License.\n# \n#
+    The Original Source Code was developed by Robert Cowart. Portions created by\n#
+    Robert Cowart are Copyright (C)2020 Robert Cowart. All Rights Reserved.\n#------------------------------------------------------------------------------\n\ninput
+    {\n  # IPFIX\n  tcp {\n    host => \"${ELASTIFLOW_IPFIX_TCP_IPV4_HOST:0.0.0.0}\"\n
+    \   port => \"${ELASTIFLOW_IPFIX_TCP_IPV4_PORT:4739}\"\n    dns_reverse_lookup_enabled
+    => \"false\"\n    codec => netflow {\n      versions => [10]\n      target =>
+    \"ipfix\"\n      include_flowset_id => \"true\"\n      netflow_definitions =>
+    \"${ELASTIFLOW_DEFINITION_PATH:/etc/logstash/elastiflow/definitions}/netflow.yml\"\n
+    \     ipfix_definitions => \"${ELASTIFLOW_DEFINITION_PATH:/etc/logstash/elastiflow/definitions}/ipfix.yml\"\n
+    \   }\n    type => \"ipfix\"\n  }\n  udp {\n    host => \"${ELASTIFLOW_IPFIX_UDP_IPV4_HOST:0.0.0.0}\"\n
+    \   port => \"${ELASTIFLOW_IPFIX_UDP_IPV4_PORT:4739}\"\n    workers => \"${ELASTIFLOW_IPFIX_UDP_WORKERS:4}\"\n
+    \   queue_size => \"${ELASTIFLOW_IPFIX_UDP_QUEUE_SIZE:2048}\"\n    receive_buffer_bytes
+    => \"${ELASTIFLOW_IPFIX_UDP_RCV_BUFF:33554432}\"\n    codec => netflow {\n      versions
+    => [5,9,10]\n      target => \"ipfix\"\n      include_flowset_id => \"true\"\n
+    \     netflow_definitions => \"${ELASTIFLOW_DEFINITION_PATH:/etc/logstash/elastiflow/definitions}/netflow.yml\"\n
+    \     ipfix_definitions => \"${ELASTIFLOW_DEFINITION_PATH:/etc/logstash/elastiflow/definitions}/ipfix.yml\"\n
+    \   }\n    type => \"ipfix\"\n  }\n}\n"
+  10_input_ipfix_ipv6.logstash.conf.disabled: "#------------------------------------------------------------------------------\n#
+    Copyright (C)2020 Robert Cowart\n# \n# The contents of this file and/or repository
+    are subject to the Robert Cowart\n# Public License (the \"License\") and may not
+    be used or distributed except in\n# compliance with the License. You may obtain
+    a copy of the License at:\n# \n# http://www.koiossian.com/public/robert_cowart_public_license.txt\n#
+    \n# Software distributed under the License is distributed on an \"AS IS\" basis,\n#
+    WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for\n#
+    the specific language governing rights and limitations under the License.\n# \n#
+    The Original Source Code was developed by Robert Cowart. Portions created by\n#
+    Robert Cowart are Copyright (C)2020 Robert Cowart. All Rights Reserved.\n#------------------------------------------------------------------------------\n\ninput
+    {\n  # IPFIX\n  tcp {\n    host => \"${ELASTIFLOW_IPFIX_TCP_IPV6_HOST:[::]}\"\n
+    \   port => \"${ELASTIFLOW_IPFIX_TCP_IPV6_PORT:54739}\"\n    dns_reverse_lookup_enabled
+    => \"false\"\n    codec => netflow {\n      versions => [10]\n      target =>
+    \"ipfix\"\n      include_flowset_id => \"true\"\n      netflow_definitions =>
+    \"${ELASTIFLOW_DEFINITION_PATH:/etc/logstash/elastiflow/definitions}/netflow.yml\"\n
+    \     ipfix_definitions => \"${ELASTIFLOW_DEFINITION_PATH:/etc/logstash/elastiflow/definitions}/ipfix.yml\"\n
+    \   }\n    type => \"ipfix\"\n  }\n  udp {\n    host => \"${ELASTIFLOW_IPFIX_UDP_IPV6_HOST:[::]}\"\n
+    \   port => \"${ELASTIFLOW_IPFIX_UDP_IPV6_PORT:54739}\"\n    workers => \"${ELASTIFLOW_IPFIX_UDP_WORKERS:4}\"\n
+    \   queue_size => \"${ELASTIFLOW_IPFIX_UDP_QUEUE_SIZE:2048}\"\n    receive_buffer_bytes
+    => \"${ELASTIFLOW_IPFIX_UDP_RCV_BUFF:33554432}\"\n    codec => netflow {\n      versions
+    => [5,9,10]\n      target => \"ipfix\"\n      include_flowset_id => \"true\"\n
+    \     netflow_definitions => \"${ELASTIFLOW_DEFINITION_PATH:/etc/logstash/elastiflow/definitions}/netflow.yml\"\n
+    \     ipfix_definitions => \"${ELASTIFLOW_DEFINITION_PATH:/etc/logstash/elastiflow/definitions}/ipfix.yml\"\n
+    \   }\n    type => \"ipfix\"\n  }\n}\n"
+  10_input_netflow_ipv4.logstash.conf: "#------------------------------------------------------------------------------\n#
+    Copyright (C)2020 Robert Cowart\n# \n# The contents of this file and/or repository
+    are subject to the Robert Cowart\n# Public License (the \"License\") and may not
+    be used or distributed except in\n# compliance with the License. You may obtain
+    a copy of the License at:\n# \n# http://www.koiossian.com/public/robert_cowart_public_license.txt\n#
+    \n# Software distributed under the License is distributed on an \"AS IS\" basis,\n#
+    WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for\n#
+    the specific language governing rights and limitations under the License.\n# \n#
+    The Original Source Code was developed by Robert Cowart. Portions created by\n#
+    Robert Cowart are Copyright (C)2020 Robert Cowart. All Rights Reserved.\n#------------------------------------------------------------------------------\n\ninput
+    {\n  # Netflow\n  udp {\n    host => \"${ELASTIFLOW_NETFLOW_IPV4_HOST:0.0.0.0}\"\n
+    \   port => \"${ELASTIFLOW_NETFLOW_IPV4_PORT:2055}\"\n    workers => \"${ELASTIFLOW_NETFLOW_UDP_WORKERS:4}\"\n
+    \   queue_size => \"${ELASTIFLOW_NETFLOW_UDP_QUEUE_SIZE:2048}\"\n    receive_buffer_bytes
+    => \"${ELASTIFLOW_NETFLOW_UDP_RCV_BUFF:33554432}\"\n    codec => netflow {\n      versions
+    => [5,9,10]\n      include_flowset_id => \"true\"\n      netflow_definitions =>
+    \"${ELASTIFLOW_DEFINITION_PATH:/etc/logstash/elastiflow/definitions}/netflow.yml\"\n
+    \     ipfix_definitions => \"${ELASTIFLOW_DEFINITION_PATH:/etc/logstash/elastiflow/definitions}/ipfix.yml\"\n
+    \   }\n    type => \"netflow\"\n  }\n}\n"
+  10_input_netflow_ipv6.logstash.conf.disabled: "#------------------------------------------------------------------------------\n#
+    Copyright (C)2020 Robert Cowart\n# \n# The contents of this file and/or repository
+    are subject to the Robert Cowart\n# Public License (the \"License\") and may not
+    be used or distributed except in\n# compliance with the License. You may obtain
+    a copy of the License at:\n# \n# http://www.koiossian.com/public/robert_cowart_public_license.txt\n#
+    \n# Software distributed under the License is distributed on an \"AS IS\" basis,\n#
+    WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for\n#
+    the specific language governing rights and limitations under the License.\n# \n#
+    The Original Source Code was developed by Robert Cowart. Portions created by\n#
+    Robert Cowart are Copyright (C)2020 Robert Cowart. All Rights Reserved.\n#------------------------------------------------------------------------------\n\ninput
+    {\n  # Netflow\n  udp {\n    host => \"${ELASTIFLOW_NETFLOW_IPV6_HOST:[::]}\"\n
+    \   port => \"${ELASTIFLOW_NETFLOW_IPV6_PORT:52055}\"\n    workers => \"${ELASTIFLOW_NETFLOW_UDP_WORKERS:4}\"\n
+    \   queue_size => \"${ELASTIFLOW_NETFLOW_UDP_QUEUE_SIZE:2048}\"\n    receive_buffer_bytes
+    => \"${ELASTIFLOW_NETFLOW_UDP_RCV_BUFF:33554432}\"\n    codec => netflow {\n      versions
+    => [5,9,10]\n      include_flowset_id => \"true\"\n      netflow_definitions =>
+    \"${ELASTIFLOW_DEFINITION_PATH:/etc/logstash/elastiflow/definitions}/netflow.yml\"\n
+    \     ipfix_definitions => \"${ELASTIFLOW_DEFINITION_PATH:/etc/logstash/elastiflow/definitions}/ipfix.yml\"\n
+    \   }\n    type => \"netflow\"\n  }\n}\n"
+  10_input_sflow_ipv4.logstash.conf: "#------------------------------------------------------------------------------\n#
+    Copyright (C)2020 Robert Cowart\n# \n# The contents of this file and/or repository
+    are subject to the Robert Cowart\n# Public License (the \"License\") and may not
+    be used or distributed except in\n# compliance with the License. You may obtain
+    a copy of the License at:\n# \n# http://www.koiossian.com/public/robert_cowart_public_license.txt\n#
+    \n# Software distributed under the License is distributed on an \"AS IS\" basis,\n#
+    WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for\n#
+    the specific language governing rights and limitations under the License.\n# \n#
+    The Original Source Code was developed by Robert Cowart. Portions created by\n#
+    Robert Cowart are Copyright (C)2020 Robert Cowart. All Rights Reserved.\n#------------------------------------------------------------------------------\n\ninput
+    {\n  # sFlow\n  udp {\n    host => \"${ELASTIFLOW_SFLOW_IPV4_HOST:0.0.0.0}\"\n
+    \   port => \"${ELASTIFLOW_SFLOW_IPV4_PORT:6343}\"\n    workers => \"${ELASTIFLOW_SFLOW_UDP_WORKERS:4}\"\n
+    \   queue_size => \"${ELASTIFLOW_SFLOW_UDP_QUEUE_SIZE:2048}\"\n    receive_buffer_bytes
+    => \"${ELASTIFLOW_SFLOW_UDP_RCV_BUFF:33554432}\"\n    codec => sflow {\n      optional_removed_field
+    => [ \"flow_sequence_number\", \"header_size\", \"ip_checksum\", \"ip_fragment_offset\",
+    \"ip_header_length\", \"ip_identification\", \"ip_total_length\", \"padded\",
+    \"sample_pool\", \"sample_seq_number\", \"sequence_number\", \"sflow_version\",
+    \"size_header\", \"stripped\", \"tcp_ack_number\", \"tcp_checksum\", \"tcp_header_length\",
+    \"tcp_reserved\", \"tcp_seq_number\", \"udp_checksum\", \"udp_length\", \"uptime_in_ms\"
+    ]\n    }\n    type => \"sflow\"\n  }\n}\n"
+  10_input_sflow_ipv6.logstash.conf.disabled: "#------------------------------------------------------------------------------\n#
+    Copyright (C)2020 Robert Cowart\n# \n# The contents of this file and/or repository
+    are subject to the Robert Cowart\n# Public License (the \"License\") and may not
+    be used or distributed except in\n# compliance with the License. You may obtain
+    a copy of the License at:\n# \n# http://www.koiossian.com/public/robert_cowart_public_license.txt\n#
+    \n# Software distributed under the License is distributed on an \"AS IS\" basis,\n#
+    WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for\n#
+    the specific language governing rights and limitations under the License.\n# \n#
+    The Original Source Code was developed by Robert Cowart. Portions created by\n#
+    Robert Cowart are Copyright (C)2020 Robert Cowart. All Rights Reserved.\n#------------------------------------------------------------------------------\n\ninput
+    {\n  # sFlow\n  udp {\n    host => \"${ELASTIFLOW_SFLOW_IPV6_HOST:[::]}\"\n    port
+    => \"${ELASTIFLOW_SFLOW_IPV6_PORT:56343}\"\n    workers => \"${ELASTIFLOW_SFLOW_UDP_WORKERS:4}\"\n
+    \   queue_size => \"${ELASTIFLOW_SFLOW_UDP_QUEUE_SIZE:2048}\"\n    receive_buffer_bytes
+    => \"${ELASTIFLOW_SFLOW_UDP_RCV_BUFF:33554432}\"\n    codec => sflow {\n      optional_removed_field
+    => [ \"flow_sequence_number\", \"header_size\", \"ip_checksum\", \"ip_fragment_offset\",
+    \"ip_header_length\", \"ip_identification\", \"ip_total_length\", \"padded\",
+    \"sample_pool\", \"sample_seq_number\", \"sequence_number\", \"sflow_version\",
+    \"size_header\", \"stripped\", \"tcp_ack_number\", \"tcp_checksum\", \"tcp_header_length\",
+    \"tcp_reserved\", \"tcp_seq_number\", \"udp_checksum\", \"udp_length\", \"uptime_in_ms\"
+    ]\n    }\n    type => \"sflow\"\n  }\n}\n"
+  20_filter_10_begin.logstash.conf: "#------------------------------------------------------------------------------\n#
+    Copyright (C)2020 Robert Cowart\n# \n# The contents of this file and/or repository
+    are subject to the Robert Cowart\n# Public License (the \"License\") and may not
+    be used or distributed except in\n# compliance with the License. You may obtain
+    a copy of the License at:\n# \n# http://www.koiossian.com/public/robert_cowart_public_license.txt\n#
+    \n# Software distributed under the License is distributed on an \"AS IS\" basis,\n#
+    WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for\n#
+    the specific language governing rights and limitations under the License.\n# \n#
+    The Original Source Code was developed by Robert Cowart. Portions created by\n#
+    Robert Cowart are Copyright (C)2020 Robert Cowart. All Rights Reserved.\n#------------------------------------------------------------------------------\n\nfilter
+    {\n  # Initialize @metadata values used to control processing flow.\n  mutate
+    {\n    rename => {\n      \"[host]\" => \"[@metadata][host]\"\n      \"[type]\"
+    => \"[event][dataset]\"\n    }\n  }\n  mutate {\n    add_field => {\n      \"[@metadata][resolve_ip2host]\"
+    => \"${ELASTIFLOW_RESOLVE_IP2HOST:false}\"\n      \"[@metadata][geoip_lookup]\"
+    => \"${ELASTIFLOW_GEOIP_LOOKUP:true}\"\n      \"[@metadata][asn_lookup]\" => \"${ELASTIFLOW_ASN_LOOKUP:true}\"\n
+    \     \"[@metadata][oui_lookup]\" => \"${ELASTIFLOW_OUI_LOOKUP:false}\"\n      \"[@metadata][populate_logs]\"
+    => \"${ELASTIFLOW_POPULATE_LOGS:true}\"\n      \"[@metadata][keep_orig_data]\"
+    => \"${ELASTIFLOW_KEEP_ORIG_DATA:true}\"\n      \"[ecs][version]\" => \"1.5.0\"\n
+    \     \"[host][ip]\" => \"%{[@metadata][host]}\"\n      \"[host][name]\" => \"%{[@metadata][host]}\"\n
+    \     \"[agent][name]\" => \"elastiflow\"\n      \"[agent][type]\" => \"logstash\"\n
+    \     \"[agent][version]\" => \"4.0.1\"\n      \"[agent][id]\" => \"${ELASTIFLOW_AGENT_ID:elastiflow}\"\n
+    \     \"[event][module]\" => \"flow\"\n      \"[event][kind]\" => \"event\"\n
+    \   }\n    replace => { \"@version\" => \"4.0.1\" }\n  }\n\n  # Add agent.hostname
+    - the host running the Logstash instance.\n  ruby {\n    init => \"\n      require
+    'socket'\n      @@hostname = Socket.gethostname\n    \"\n    code => \"event.set('[agent][hostname]',
+    @@hostname)\"\n  }\n  \n  # Adjust data for Netflow and IPFIX being received on
+    the same port.\n  if [netflow][version] == 10 {\n    mutate {\n      rename =>
+    { \"netflow\" => \"ipfix\" }\n      replace => { \"[event][dataset]\" => \"ipfix\"
+    }\n    }\n  } else if [ipfix][version] == 9 {\n    mutate {\n      rename => {
+    \"ipfix\" => \"netflow\" }\n      replace => { \"[event][dataset]\" => \"netflow\"
+    }\n    }\n  }\n\n  # Resolve node IP address to hostname.\n  if [@metadata][resolve_ip2host]
+    == \"true\" or [@metadata][resolve_ip2host] == \"exporters\" {\n    dns {\n      reverse
+    => [ \"[host][name]\" ]\n      action => \"replace\"\n      nameserver => \"${ELASTIFLOW_NAMESERVER:127.0.0.1}\"\n
+    \     hit_cache_size => \"${ELASTIFLOW_DNS_HIT_CACHE_SIZE:25000}\"\n      hit_cache_ttl
+    => \"${ELASTIFLOW_DNS_HIT_CACHE_TTL:900}\"\n      failed_cache_size => \"${ELASTIFLOW_DNS_FAILED_CACHE_SIZE:75000}\"\n
+    \     failed_cache_ttl => \"${ELASTIFLOW_DNS_FAILED_CACHE_TTL:3600}\"\n    }\n
+    \ }\n}\n"
+  20_filter_20_netflow.logstash.conf: "#------------------------------------------------------------------------------\n#
+    Copyright (C)2020 Robert Cowart\n# \n# The contents of this file and/or repository
+    are subject to the Robert Cowart\n# Public License (the \"License\") and may not
+    be used or distributed except in\n# compliance with the License. You may obtain
+    a copy of the License at:\n# \n# http://www.koiossian.com/public/robert_cowart_public_license.txt\n#
+    \n# Software distributed under the License is distributed on an \"AS IS\" basis,\n#
+    WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for\n#
+    the specific language governing rights and limitations under the License.\n# \n#
+    The Original Source Code was developed by Robert Cowart. Portions created by\n#
+    Robert Cowart are Copyright (C)2020 Robert Cowart. All Rights Reserved.\n#------------------------------------------------------------------------------\n\nfilter
+    {\n  if [event][dataset] == \"netflow\" {\n    # If flows are sent through a proxy
+    that adds exporterIPv4Address or exporterIPv6Address, then reset node.ipaddr and
+    node.hostname.\n      if [netflow][exporterIPv4Address] or [netflow][exporterIPv6Address]
+    {\n        if [netflow][exporterIPv4Address] {\n          mutate {\n            replace
+    => {\n              \"[host][ip]\" => \"%{[netflow][exporterIPv4Address]}\"\n
+    \             \"[host][name]\" => \"%{[netflow][exporterIPv4Address]}\"\n            }\n
+    \         }\n          mutate {\n            remove_field => [ \"[netflow][exporterIPv4Address]\"
+    ]\n          }\n        } else if [netflow][exporterIPv6Address] {\n          mutate
+    {\n            replace => {\n              \"[host][ip]\" => \"%{[netflow][exporterIPv6Address]}\"\n
+    \             \"[host][name]\" => \"%{[netflow][exporterIPv6Address]}\"\n            }\n
+    \         }\n          mutate {\n            remove_field => [ \"[netflow][exporterIPv6Address]\"
+    ]\n          }\n        }\n\n        if [@metadata][resolve_ip2host] == \"true\"
+    or [@metadata][resolve_ip2host] == \"exporters\" {\n          dns {\n            reverse
+    => [ \"[host][name]\" ]\n            action => \"replace\"\n            nameserver
+    => \"${ELASTIFLOW_NAMESERVER:127.0.0.1}\"\n            hit_cache_size => \"${ELASTIFLOW_DNS_HIT_CACHE_SIZE:25000}\"\n
+    \           hit_cache_ttl => \"${ELASTIFLOW_DNS_HIT_CACHE_TTL:900}\"\n            failed_cache_size
+    => \"${ELASTIFLOW_DNS_FAILED_CACHE_SIZE:75000}\"\n            failed_cache_ttl
+    => \"${ELASTIFLOW_DNS_FAILED_CACHE_TTL:3600}\"\n          }\n        }\n      }\n
+    \   \n    # Set ECS event.start, event.end and event.duration.\n      if [netflow][first_switched]
+    {\n        date {\n          locale => \"en\"\n          match => [ \"[netflow][first_switched]\",
+    \"ISO8601\" ]\n          timezone => \"${ELASTIFLOW_NETFLOW_TZ:UTC}\"\n          target
+    => \"[event][start]\"\n        }\n        mutate {\n          remove_field =>
+    [ \"[netflow][first_switched]\" ]\n        }\n      }\n\n      if [netflow][last_switched]
+    {\n        date {\n          locale => \"en\"\n          match => [ \"[netflow][last_switched]\",
+    \"ISO8601\" ]\n          timezone => \"${ELASTIFLOW_NETFLOW_TZ:UTC}\"\n          target
+    => \"[event][end]\"\n        }\n        mutate {\n          remove_field => [
+    \"[netflow][last_switched]\" ]\n        }\n      }\n\n      if [event][start]
+    and [event][end] {\n        ruby {\n          code => \"event.set( '[event][duration]',
+    event.get('[event][end]').to_i - event.get('[event][start]').to_i )\"\n        }\n
+    \     }\n\n    # Populate normalized ElastiFlow fields common to both Netflow
+    v5 and Netflow v9.\n      mutate {\n        rename => {\n          \"[netflow][sampling_interval]\"
+    => \"[flow][sampling_interval]\"\n          \"[netflow][input_snmp]\" => \"[flow][input_snmp]\"\n
+    \         \"[netflow][output_snmp]\" => \"[flow][output_snmp]\"\n          \"[netflow][protocol]\"
+    => \"[network][iana_number]\"\n          \"[netflow][tcp_flags]\" => \"[flow][tcp_flags]\"\n
+    \       }\n      }\n      mutate {\n        convert => {\n          \"[network][iana_number]\"
+    => \"integer\"\n          \"[flow][sampling_interval]\" => \"integer\"\n          \"[flow][tcp_flags]\"
+    => \"integer\"\n          \"[flow][input_snmp]\" => \"integer\"\n          \"[flow][output_snmp]\"
+    => \"integer\"\n        }\n      }\n\n    #--------------------\n    # The field
+    names for Netflow v5 and v9 differ. We need to normalize to a\n    # common data
+    model so that we can work with the resulting events in a common manner.\n    #--------------------\n\n
+    \   # Process Netflow v5 events.\n    if [netflow][version] == 5 {\n      # Netflow
+    v5 supports ONLY ingress flows and IPv4.\n        mutate {\n          add_field
+    => {\n            \"[flow][direction]\" => \"ingress\"\n            \"[network][type]\"
+    => \"ipv4\"\n          }\n        }\n\n      # Populate normalized ElastiFlow
+    fields with Netflow v5 data.\n        mutate {\n          rename => {\n            \"[netflow][ipv4_src_addr]\"
+    => \"[source][ip]\"\n            \"[netflow][src_mask]\" => \"[flow][src_mask_len]\"\n
+    \           \"[netflow][l4_src_port]\" => \"[source][port]\"\n            \"[netflow][ipv4_dst_addr]\"
+    => \"[destination][ip]\"\n            \"[netflow][dst_mask]\" => \"[flow][dst_mask_len]\"\n
+    \           \"[netflow][l4_dst_port]\" => \"[destination][port]\"\n            \"[netflow][ipv4_next_hop]\"
+    => \"[flow][next_hop]\"\n            \"[netflow][src_tos]\" => \"[flow][tos]\"\n
+    \         }\n        }\n\n        if [netflow][in_bytes] {\n          mutate {
+    \n            add_field => {\n              \"[network][bytes]\" => \"%{[netflow][in_bytes]}\"\n
+    \             \"[source][bytes]\" => \"%{[netflow][in_bytes]}\"\n            }\n
+    \         }\n        }\n\n        if [netflow][in_pkts] {\n          mutate {
+    \n            add_field => {\n              \"[network][packets]\" => \"%{[netflow][in_pkts]}\"\n
+    \             \"[source][packets]\" => \"%{[netflow][in_pkts]}\"\n            }\n
+    \         }\n        }\n        \n        mutate {\n          convert => {\n            \"[source][port]\"
+    => \"integer\"\n            \"[destination][port]\" => \"integer\"\n            \"[network][bytes]\"
+    => \"integer\"\n            \"[source][bytes]\" => \"integer\"\n            \"[network][packets]\"
+    => \"integer\"\n            \"[source][packets]\" => \"integer\"\n          }\n
+    \       }\n    }\n    \n    # Process Netflow v9 events.\n    else if [netflow][version]
+    == 9 {\n      # Set IP version.\n        if [netflow][ip_protocol_version] {\n
+    \         mutate {\n            add_field => { \"[network][type]\" => \"ipv%{[netflow][ip_protocol_version]}\"
+    }\n          }\n          mutate {\n            remove_field => [ \"[netflow][ip_protocol_version]\"
+    ]\n          }\n        }\n\n      # Populate normalized ElastiFlow fields with
+    simple mappings\n        mutate {\n          rename => {\n            \"[netflow][bgpValidityState]\"
+    => \"[flow][bgp_valid_state]\"\n            \"[netflow][xlate_src_port]\" => \"[source][nat][port]\"\n
+    \           \"[netflow][xlate_dst_port]\" => \"[destination][nat][port]\"\n            \"[netflow][direction]\"
+    => \"[flow][direction]\"\n            \"[netflow][staMacAddress]\" => \"[flow][wifi_sta_mac]\"\n
+    \           \"[netflow][wlanSSID]\" => \"[flow][wifi_ssid]\"\n            \"[netflow][wtpMacAddress]\"
+    => \"[flow][wifi_wtp_mac]\"\n          }\n          convert => {\n            \"[netflow][biflowDirection]\"
+    => \"integer\"\n          }\n        }\n\n      # Populate normalized ElastiFlow
+    fields with IPv4 or IPv6 specific fields.\n        if [netflow][ipv4_src_addr]
+    or [netflow][ipv4_dst_addr] or [netflow][staIPv4Address] {\n          # Looks
+    like an IPv4 flow.\n          if ![network][type] {\n            mutate {\n              add_field
+    => { \"[network][type]\" => \"ipv4\" }\n            }\n          }\n\n          mutate
+    {\n            rename => {\n              \"[netflow][ipv4_src_addr]\" => \"[source][ip]\"\n
+    \             \"[netflow][xlate_src_addr_ipv4]\" => \"[source][nat][ip]\"\n              \"[netflow][src_mask]\"
+    => \"[flow][src_mask_len]\"\n              \"[netflow][ipv4_dst_addr]\" => \"[destination][ip]\"\n
+    \             \"[netflow][xlate_dst_addr_ipv4]\" => \"[destination][nat][ip]\"\n
+    \             \"[netflow][dst_mask]\" => \"[flow][dst_mask_len]\"\n              \"[netflow][ipv4_next_hop]\"
+    => \"[flow][next_hop]\"\n              \"[netflow][bgp_ipv4_next_hop]\" => \"[flow][bgp_next_hop]\"\n
+    \             \"[netflow][staIPv4Address]\" => \"[flow][wifi_sta_addr]\"\n            }\n
+    \         }\n        } else if [netflow][ipv6_src_addr] or [netflow][ipv6_dst_addr]
+    or [netflow][staIPv6Address] {\n          # Looks like an IPv6 flow.\n          if
+    ![network][type] {\n            mutate {\n              add_field => { \"[network][type]\"
+    => \"ipv6\" }\n            }\n          }\n\n          mutate {\n            rename
+    => {\n              \"[netflow][ipv6_src_addr]\" => \"[source][ip]\"\n              \"[netflow][xlate_src_addr_ipv6]\"
+    => \"[source][nat][ip]\"\n              \"[netflow][ipv6_src_mask]\" => \"[flow][src_mask_len]\"\n
+    \             \"[netflow][ipv6_dst_addr]\" => \"[destination][ip]\"\n              \"[netflow][xlate_dst_addr_ipv6]\"
+    => \"[destination][nat][ip]\"\n              \"[netflow][ipv6_dst_mask]\" => \"[flow][dst_mask_len]\"\n
+    \             \"[netflow][ipv6_next_hop]\" => \"[flow][next_hop]\"\n              \"[netflow][bgp_ipv6_next_hop]\"
+    => \"[flow][bgp_next_hop]\"\n              \"[netflow][staIPv6Address]\" => \"[flow][wifi_sta_addr]\"\n
+    \           }\n          }\n        } else if [netflow][cisco_avc_client_ipv4_addr]
+    or [netflow][cisco_avc_server_ipv4_addr] {\n          # Looks like a Cisco AVC
+    IPv4 flow.\n          if ![network][type] {\n            mutate {\n              add_field
+    => { \"[network][type]\" => \"ipv4\" }\n            }\n          }\n\n          if
+    [netflow][biflowDirection] == 1 {\n            mutate {\n              rename
+    => {\n                \"[netflow][cisco_avc_client_ipv4_addr]\" => \"[source][ip]\"\n
+    \               \"[netflow][cisco_avc_server_ipv4_addr]\" => \"[destination][ip]\"\n
+    \               \"[netflow][cisco_avc_server_l4_port]\" => \"[destination][port]\"\n
+    \             }\n              add_field => { \"[@metadata][isServer]\" => \"dst\"
+    }\n            }\n          } else if [netflow][biflowDirection] == 2 {\n            mutate
+    {\n              rename => {\n                \"[netflow][cisco_avc_client_ipv4_addr]\"
+    => \"[destination][ip]\"\n                \"[netflow][cisco_avc_server_ipv4_addr]\"
+    => \"[source][ip]\"\n                \"[netflow][cisco_avc_server_l4_port]\" =>
+    \"[source][port]\"\n              }\n              add_field => { \"[@metadata][isServer]\"
+    => \"src\" }\n            }\n          }\n        } else if [netflow][cisco_avc_client_ipv6_addr]
+    or [netflow][cisco_avc_server_ipv6_addr] {\n          # Looks like a Cisco AVC
+    IPv6 flow.\n          if ![network][type] {\n            mutate {\n              add_field
+    => { \"[network][type]\" => \"ipv6\" }\n            }\n          }\n\n          if
+    [netflow][biflowDirection] == 1 {\n            mutate {\n              rename
+    => {\n                \"[netflow][cisco_avc_client_ipv6_addr]\" => \"[source][ip]\"\n
+    \               \"[netflow][cisco_avc_server_ipv6_addr]\" => \"[destination][ip]\"\n
+    \               \"[netflow][cisco_avc_server_l4_port]\" => \"[destination][port]\"\n
+    \             }\n              add_field => { \"[@metadata][isServer]\" => \"dst\"
+    }\n            }\n          } else if [netflow][biflowDirection] == 2 {\n            mutate
+    {\n              rename => {\n                \"[netflow][cisco_avc_client_ipv6_addr]\"
+    => \"[destination][ip]\"\n                \"[netflow][cisco_avc_server_ipv6_addr]\"
+    => \"[source][ip]\"\n                \"[netflow][cisco_avc_server_l4_port]\" =>
+    \"[source][port]\"\n              }\n              add_field => { \"[@metadata][isServer]\"
+    => \"src\" }\n            }\n          }\n        } else {\n          # Did not
+    recognize IP version.\n          mutate {\n            add_tag => [ \"__netflow_ip_version_not_recognized\"
+    ]\n            replace => { \"[network][type]\" => \"undetermined\" }\n          }\n
+    \       }\n\n        if [netflow][biflowDirection] {\n          translate {\n
+    \           dictionary => {\n              \"1\" => \"dst\"\n              \"2\"
+    => \"src\"\n            }\n            field => \"[netflow][biflowDirection]\"\n
+    \           destination => \"[@metadata][isServer]\"\n            override =>
+    true\n          }\n        }\n\n      # Populate source.ip from flow.wifi_sta_addr
+    if not present\n        if ![source][ip] and [flow][wifi_sta_addr] {\n          mutate
+    {\n            add_field => { \"[source][ip]\" => \"%{[flow][wifi_sta_addr]}\"
+    }\n          }\n        }\n      \n      # Populate normalized ElastiFlow fields
+    with flow directiom (ingress/egress).\n        if [flow][direction] {\n          translate
+    {\n            dictionary => {\n              \"0\" => \"ingress\"\n              \"1\"
+    => \"egress\"\n            }\n            field => \"[flow][direction]\"\n            destination
+    => \"[flow][direction]\"\n            override => true\n            fallback =>
+    \"undetermined\"\n          }\n        } else {\n          mutate {\n            add_field
+    => { \"[flow][direction]\" => \"unspecified\" }\n          }\n        }\n\n      #
+    Populate normalized ElastiFlow fields with source protocol port.\n        if [netflow][l4_src_port]
+    {\n          mutate {\n            rename => { \"[netflow][l4_src_port]\" => \"[source][port]\"
+    }\n          }\n        } else if [netflow][tcp_src_port] {\n          mutate
+    {\n            rename => { \"[netflow][tcp_src_port]\" => \"[source][port]\" }\n
+    \         }\n        } else if [netflow][udp_src_port] {\n          mutate {\n
+    \           rename => { \"[netflow][udp_src_port]\" => \"[source][port]\" }\n
+    \         }\n        }\n        if [source][port] {\n          mutate {\n            convert
+    => { \"[source][port]\" => \"integer\" }\n          }\n        }\n\n      # Populate
+    normalized ElastiFlow fields with destination protocol port.\n        if [netflow][l4_dst_port]
+    {\n          mutate {\n            rename => { \"[netflow][l4_dst_port]\" => \"[destination][port]\"
+    }\n          }\n        } else if [netflow][tcp_dst_port] {\n          mutate
+    {\n            rename => { \"[netflow][tcp_dst_port]\" => \"[destination][port]\"
+    }\n          }\n        } else if [netflow][udp_src_port] {\n          mutate
+    {\n            rename => { \"[netflow][udp_dst_port]\" => \"[destination][port]\"
+    }\n          }\n        }\n        if [destination][port] {\n          mutate
+    {\n            convert => { \"[destination][port]\" => \"integer\" }\n          }\n
+    \       }\n\n      # Populate normalized ElastiFlow fields with bytes transferred
+    in the flow.\n        if [netflow][in_bytes] {\n          mutate {\n            replace
+    => {\n              \"[network][bytes]\" => \"%{[netflow][in_bytes]}\"\n              \"[source][bytes]\"
+    => \"%{[netflow][in_bytes]}\"\n            }\n          }\n        } else if [netflow][out_bytes]
+    {\n          mutate {\n            replace => {\n              \"[network][bytes]\"
+    => \"%{[netflow][out_bytes]}\"\n              \"[source][bytes]\" => \"%{[netflow][out_bytes]}\"\n
+    \           }\n          }\n        } else if [netflow][in_permanent_bytes] {\n
+    \         mutate {\n            replace => {\n              \"[network][bytes]\"
+    => \"%{[netflow][in_permanent_bytes]}\"\n              \"[source][bytes]\" =>
+    \"%{[netflow][in_permanent_bytes]}\"\n            }\n          }\n        } else
+    if [netflow][initiatorOctets] {\n          if [netflow][responderOctets] {\n            if
+    [@metadata][isServer] == \"src\" {\n              ruby {\n                code
+    => \"\n                  event.set( '[network][bytes]', event.get('[netflow][initiatorOctets]').to_i
+    + event.get('[netflow][responderOctets]').to_i )\n                  event.set(
+    '[source][bytes]', event.get('[netflow][responderOctets]').to_i )\n                  event.set(
+    '[destination][bytes]', event.get('[netflow][initiatorOctets]').to_i )\n                \"\n
+    \             }\n            } else {\n              ruby {\n                code
+    => \"\n                  event.set( '[network][bytes]', event.get('[netflow][initiatorOctets]').to_i
+    + event.get('[netflow][responderOctets]').to_i )\n                  event.set(
+    '[source][bytes]', event.get('[netflow][initiatorOctets]').to_i )\n                  event.set(
+    '[destination][bytes]', event.get('[netflow][responderOctets]').to_i )\n                \"\n
+    \             }\n            }\n          } else {\n            if [@metadata][isServer]
+    == \"src\" {\n              mutate {\n                replace => {\n                  \"[network][bytes]\"
+    => \"%{[netflow][initiatorOctets]}\"\n                  \"[destination][bytes]\"
+    => \"%{[netflow][initiatorOctets]}\"\n                }\n              }\n            }
+    else {\n              mutate {\n                replace => {\n                  \"[network][bytes]\"
+    => \"%{[netflow][initiatorOctets]}\"\n                  \"[source][bytes]\" =>
+    \"%{[netflow][initiatorOctets]}\"\n                }\n              }\n            }\n
+    \         }\n        } else if [netflow][responderOctets] {\n          if [@metadata][isServer]
+    == \"src\" {\n            mutate {\n              replace => {\n                \"[network][bytes]\"
+    => \"%{[netflow][responderOctets]}\"\n                \"[source][bytes]\" => \"%{[netflow][responderOctets]}\"\n
+    \             }\n            }\n          } else {\n            mutate {\n              replace
+    => {\n                \"[network][bytes]\" => \"%{[netflow][responderOctets]}\"\n
+    \               \"[destination][bytes]\" => \"%{[netflow][responderOctets]}\"\n
+    \             }\n            }\n          }\n        } else if [netflow][cisco_avc_client_bytes]
+    {\n          if [netflow][cisco_avc_server_bytes] {\n            if [@metadata][isServer]
+    == \"src\" {\n              ruby {\n                code => \"\n                  event.set(
+    '[network][bytes]', event.get('[netflow][cisco_avc_client_bytes]').to_i + event.get('[netflow][cisco_avc_server_bytes]').to_i
+    )\n                  event.set( '[source][bytes]', event.get('[netflow][cisco_avc_server_bytes]').to_i
+    )\n                  event.set( '[destination][bytes]', event.get('[netflow][cisco_avc_client_bytes]').to_i
+    )\n                \"\n              }\n            } else {\n              ruby
+    {\n                code => \"\n                  event.set( '[network][bytes]',
+    event.get('[netflow][cisco_avc_client_bytes]').to_i + event.get('[netflow][cisco_avc_server_bytes]').to_i
+    )\n                  event.set( '[source][bytes]', event.get('[netflow][cisco_avc_client_bytes]').to_i
+    )\n                  event.set( '[destination][bytes]', event.get('[netflow][cisco_avc_server_bytes]').to_i
+    )\n                \"\n              }\n            }\n          } else {\n            if
+    [@metadata][isServer] == \"src\" {\n              mutate {\n                replace
+    => {\n                  \"[network][bytes]\" => \"%{[netflow][cisco_avc_client_bytes]}\"\n
+    \                 \"[destination][bytes]\" => \"%{[netflow][cisco_avc_client_bytes]}\"\n
+    \               }\n              }\n            } else {\n              mutate
+    {\n                replace => {\n                  \"[network][bytes]\" => \"%{[netflow][cisco_avc_client_bytes]}\"\n
+    \                 \"[source][bytes]\" => \"%{[netflow][cisco_avc_client_bytes]}\"\n
+    \               }\n              }\n            }\n          }\n        } else
+    if [netflow][cisco_avc_server_bytes] {\n          if [@metadata][isServer] ==
+    \"src\" {\n            mutate {\n              replace => {\n                \"[network][bytes]\"
+    => \"%{[netflow][cisco_avc_server_bytes]}\"\n                \"[source][bytes]\"
+    => \"%{[netflow][cisco_avc_server_bytes]}\"\n              }\n            }\n
+    \         } else {\n            mutate {\n              replace => {\n                \"[network][bytes]\"
+    => \"%{[netflow][cisco_avc_server_bytes]}\"\n                \"[destination][bytes]\"
+    => \"%{[netflow][cisco_avc_server_bytes]}\"\n              }\n            }\n
+    \         }\n        }\n        if [network][bytes] {\n          mutate {\n            convert
+    => {\n              \"[network][bytes]\" => \"integer\"\n              \"[source][bytes]\"
+    => \"integer\"\n              \"[destination][bytes]\" => \"integer\"\n            }\n
+    \         }\n        }\n      \n      # Populate normalized ElastiFlow fields
+    with packets transferred in the flow.\n        if [netflow][in_pkts] {\n          mutate
+    {\n            replace => {\n              \"[network][packets]\" => \"%{[netflow][in_pkts]}\"\n
+    \             \"[source][packets]\" => \"%{[netflow][in_pkts]}\"\n            }\n
+    \         }\n        } else if [netflow][out_pkts] {\n          mutate {\n            replace
+    => {\n              \"[network][packets]\" => \"%{[netflow][out_pkts]}\"\n              \"[source][packets]\"
+    => \"%{[netflow][out_pkts]}\"\n            }\n          }\n        } else if [netflow][in_permanent_pkts]
+    {\n          mutate {\n            replace => {\n              \"[network][packets]\"
+    => \"%{[netflow][in_permanent_pkts]}\"\n              \"[source][packets]\" =>
+    \"%{[netflow][in_permanent_pkts]}\"\n            }\n          }\n        } else
+    if [netflow][initiatorPackets] {\n          if [netflow][responderPackets] {\n
+    \           if [@metadata][isServer] == \"src\" {\n              ruby {\n                code
+    => \"\n                  event.set( '[network][packets]', event.get('[netflow][initiatorPackets]').to_i
+    + event.get('[netflow][responderPackets]').to_i )\n                  event.set(
+    '[source][packets]', event.get('[netflow][responderPackets]').to_i )\n                  event.set(
+    '[destination][packets]', event.get('[netflow][initiatorPackets]').to_i )\n                \"\n
+    \             }\n            } else {\n              ruby {\n                code
+    => \"\n                  event.set( '[network][packets]', event.get('[netflow][initiatorPackets]').to_i
+    + event.get('[netflow][responderPackets]').to_i )\n                  event.set(
+    '[source][packets]', event.get('[netflow][initiatorPackets]').to_i )\n                  event.set(
+    '[destination][packets]', event.get('[netflow][responderPackets]').to_i )\n                \"\n
+    \             }\n            }\n          } else {\n            if [@metadata][isServer]
+    == \"src\" {\n              mutate {\n                replace => {\n                  \"[network][packets]\"
+    => \"%{[netflow][initiatorPackets]}\"\n                  \"[destination][packets]\"
+    => \"%{[netflow][initiatorPackets]}\"\n                }\n              }\n            }
+    else {\n              mutate {\n                replace => {\n                  \"[network][packets]\"
+    => \"%{[netflow][initiatorPackets]}\"\n                  \"[source][packets]\"
+    => \"%{[netflow][initiatorPackets]}\"\n                }\n              }\n            }\n
+    \         }\n        } else if [netflow][responderPackets] {\n          if [@metadata][isServer]
+    == \"src\" {\n            mutate {\n              replace => {\n                \"[network][packets]\"
+    => \"%{[netflow][responderPackets]}\"\n                \"[source][packets]\" =>
+    \"%{[netflow][responderPackets]}\"\n              }\n            }\n          }
+    else {\n            mutate {\n              replace => {\n                \"[network][packets]\"
+    => \"%{[netflow][responderPackets]}\"\n                \"[destination][packets]\"
+    => \"%{[netflow][responderPackets]}\"\n              }\n            }\n          }\n
+    \       }\n        if [network][packets] {\n          mutate {\n            convert
+    => {\n              \"[network][packets]\" => \"integer\"\n              \"[source][packets]\"
+    => \"integer\"\n              \"[destination][packets]\" => \"integer\"\n            }\n
+    \         }\n        }\n\n      # Populate normalized ElastiFlow fields with source
+    and destination MAC addresses if available.\n        if [netflow][in_src_mac]
+    {\n          mutate {\n            rename => { \"[netflow][in_src_mac]\" => \"[source][mac]\"
+    }\n          }\n        } else if [netflow][out_src_mac] {\n          mutate {\n
+    \           rename => { \"[netflow][out_src_mac]\" => \"[source][mac]\" }\n          }\n
+    \       }\n        if [netflow][in_dst_mac] {\n          mutate {\n            rename
+    => { \"[netflow][in_dst_mac]\" => \"[destination][mac]\" }\n          }\n        }
+    else if [netflow][out_dst_mac] {\n          mutate {\n            rename => {
+    \"[netflow][out_dst_mac]\" => \"[destination][mac]\" }\n          }\n        }\n\n
+    \     # Populate normalized ElastiFlow for VLAN if available.\n        if [netflow][src_vlan]
+    {\n          mutate {\n            rename => { \"[netflow][src_vlan]\" => \"[flow][vlan]\"
+    }\n          }\n          if [flow][vlan] == [netflow][dst_vlan] {\n            mutate
+    {\n              remove_field => [ \"[netflow][dst_vlan]\" ]\n            }\n
+    \         }\n        } else if [netflow][dst_vlan] {\n          mutate {\n            rename
+    => { \"[netflow][dst_vlan]\" => \"[flow][vlan]\" }\n          }\n        }\n\n
+    \     # Populate normalized ElastiFlow fields for ToS if available.\n        if
+    [netflow][src_tos] {\n          mutate {\n            rename => { \"[netflow][src_tos]\"
+    => \"[flow][tos]\" }\n          }\n          if [flow][tos] == [netflow][dst_tos]
+    {\n            mutate {\n              remove_field => [ \"[netflow][dst_tos]\"
+    ]\n            }\n          }\n        } else if [netflow][dst_tos] {\n          mutate
+    {\n            rename => { \"[netflow][dst_tos]\" => \"[flow][tos]\" }\n          }\n
+    \       }\n      \n      # Populate normalized ElastiFlow fields for applications
+    if available.\n        if [netflow][app_name] {\n          mutate {\n            rename
+    => { \"[netflow][app_name]\" => \"[network][application]\" }\n            remove_field
+    => [ \"[netflow][app_id]\" ]\n          }\n        } else if [netflow][app_id]
+    {\n          if [netflow][app_id] =~ /^.*:[0-9]+$/ {\n            mutate {\n              gsub
+    => [ \"[netflow][app_id]\", \":\", \"..\" ]\n            }\n          }\n\n          if
+    [netflow][app_id] != \"0..0\" {\n            translate {\n              dictionary_path
+    => \"${ELASTIFLOW_USER_SETTINGS_PATH:/etc/logstash/elastiflow/user_settings}/app_id.srctype.yml\"\n
+    \             field => \"[host][ip]\"\n              destination => \"[@metadata][appid_srctype]\"\n
+    \             fallback => \"${ELASTIFLOW_DEFAULT_APPID_SRCTYPE:__UNKNOWN}\"\n
+    \             refresh_behaviour => \"replace\"\n            }\n\n            if
+    [@metadata][appid_srctype] == \"fortinet\" {\n              if [netflow][app_id]
+    =~ /^[0-9]+\\.\\.[0-9]+\\.\\.[0-9]+$/ {\n                mutate {\n                  gsub
+    => [ \"[netflow][app_id]\", \"[0-9]+\\.\\.[0-9]+\\.\\.\", \"0..\" ]\n                }\n
+    \             }\n            }\n\n            if [@metadata][appid_srctype] !=
+    \"__UNKNOWN\" {\n              mutate {\n                add_field => { \"[@metadata][appid_key]\"
+    => \"%{[@metadata][appid_srctype]}__%{[netflow][app_id]}\" }\n              }\n
+    \             translate {\n                dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/app_id.yml\"\n
+    \               field => \"[@metadata][appid_key]\"\n                destination
+    => \"[network][application]\"\n                fallback => \"%{[netflow][app_id]}\"\n
+    \               refresh_behaviour => \"replace\"\n              }\n              mutate
+    {\n                remove_field => [ \"[netflow][app_id]\" ]\n              }\n
+    \           } else {\n              mutate {\n                rename => { \"[netflow][app_id]\"
+    => \"[network][application]\" }\n              }\n            }\n          } else
+    {\n            mutate {\n              remove_field => [ \"[netflow][app_id]\"
+    ]\n            }\n          }\n        } else if [netflow][ntop_l7_proto_name]
+    {\n          mutate {\n            rename => { \"[netflow][ntop_l7_proto_name]\"
+    => \"[network][application]\" }\n          }\n        } else if [netflow][pan_app]
+    {\n          mutate {\n            rename => { \"[netflow][pan_app]\" => \"[network][application]\"
+    }\n          }\n        }\n      \n      # Lookup Riverbed-specific fields if
+    present.\n        if [netflow][riverbed_fe_type] {\n          translate {\n            dictionary_path
+    => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/riverbed_fe_type.yml\"\n
+    \           field => \"[netflow][riverbed_fe_type]\"\n            destination
+    => \"[netflow][riverbed_fe_type]\"\n            override => true\n            fallback
+    => \"undefined (%{[netflow][riverbed_fe_type]})\"\n            refresh_behaviour
+    => \"replace\"\n          }\n        }\n        if [netflow][riverbed_passthru_reason]
+    {\n          translate {\n            dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/riverbed_passthru_reason.yml\"\n
+    \           field => \"[netflow][riverbed_passthru_reason]\"\n            destination
+    => \"[netflow][riverbed_passthru_reason]\"\n            override => true\n            fallback
+    => \"undefined (%{[netflow][riverbed_passthru_reason]})\"\n            refresh_behaviour
+    => \"replace\"\n          }\n        }\n        if [netflow][riverbed_wan_visibility]
+    {\n          translate {\n            dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/riverbed_wan_visibility.yml\"\n
+    \           field => \"[netflow][riverbed_wan_visibility]\"\n            destination
+    => \"[netflow][riverbed_wan_visibility]\"\n            override => true\n            fallback
+    => \"undefined (%{[netflow][riverbed_wan_visibility]})\"\n            refresh_behaviour
+    => \"replace\"\n          }\n        }\n        if [netflow][riverbed_cfe_tcp_port]
+    {\n          mutate {\n            add_field => { \"[@metadata][cfe_port_key]\"
+    => \"6:%{[netflow][riverbed_cfe_tcp_port]}\" }\n          }\n          translate
+    {\n            dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/iana_service_names.yml\"\n
+    \           field => \"[@metadata][cfe_port_key]\"\n            destination =>
+    \"[netflow][riverbed_cfe_tcp_port_name]\"\n            fallback => \"TCP/%{[netflow][riverbed_cfe_tcp_port]}\"\n
+    \           refresh_behaviour => \"replace\"\n          }\n        }\n        if
+    [netflow][riverbed_outer_tcp_port] {\n          mutate {\n            add_field
+    => { \"[@metadata][outer_port_key]\" => \"6:%{[netflow][riverbed_outer_tcp_port]}\"
+    }\n          }\n          translate {\n            dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/iana_service_names.yml\"\n
+    \           field => \"[@metadata][outer_port_key]\"\n            destination
+    => \"[netflow][riverbed_outer_tcp_port_name]\"\n            fallback => \"TCP/%{[netflow][riverbed_outer_tcp_port]}\"\n
+    \           refresh_behaviour => \"replace\"\n          }\n        }\n        if
+    [netflow][riverbed_sfe_tcp_port] {\n          mutate {\n            add_field
+    => { \"[@metadata][sfe_port_key]\" => \"6:%{[netflow][riverbed_sfe_tcp_port]}\"
+    }\n          }\n          translate {\n            dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/iana_service_names.yml\"\n
+    \           field => \"[@metadata][sfe_port_key]\"\n            destination =>
+    \"[netflow][riverbed_sfe_tcp_port_name]\"\n            fallback => \"TCP/%{[netflow][riverbed_sfe_tcp_port]}\"\n
+    \           refresh_behaviour => \"replace\"\n          }\n        }\n    }\n\n
+    \   # Netflow version was not recognized.\n      else {\n        mutate {\n          add_tag
+    => [ \"__netflow_version_not_recognized\" ]\n        }\n      }\n\n    # If sampled
+    Netflow, adjust Bytes and Packets accordingly.\n      # Workaround for sampled
+    flows when the sampling interval is not set (e.g. from Cisco IOS XR or some Huawei
+    devices)\n      if ![flow][sampling_interval] {\n        translate {\n          dictionary_path
+    => \"${ELASTIFLOW_USER_SETTINGS_PATH:/etc/logstash/elastiflow/user_settings}/sampling_interval.yml\"\n
+    \         field => \"[host][ip]\"\n          destination => \"[flow][sampling_interval]\"\n
+    \         fallback => \"0\"\n          refresh_behaviour => \"replace\"\n        }\n
+    \       mutate {\n          convert => { \"[flow][sampling_interval]\" => \"integer\"
+    }\n        }\n      }\n\n      if [flow][sampling_interval] {\n        if [network][bytes]
+    and [flow][sampling_interval] > 0 {\n          ruby {\n            code => \"event.set(
+    '[network][bytes]', event.get('[network][bytes]').to_i * event.get('[flow][sampling_interval]').to_i
+    )\"\n          }\n        }\n        if [network][packets] and [flow][sampling_interval]
+    > 0 {\n          ruby {\n            code => \"event.set( '[network][packets]',
+    event.get('[network][packets]').to_i * event.get('[flow][sampling_interval]').to_i
+    )\"\n          }\n        }\n      }\n  }\n}\n"
+  20_filter_30_ipfix.logstash.conf: "#------------------------------------------------------------------------------\n#
+    Copyright (C)2020 Robert Cowart\n# \n# The contents of this file and/or repository
+    are subject to the Robert Cowart\n# Public License (the \"License\") and may not
+    be used or distributed except in\n# compliance with the License. You may obtain
+    a copy of the License at:\n# \n# http://www.koiossian.com/public/robert_cowart_public_license.txt\n#
+    \n# Software distributed under the License is distributed on an \"AS IS\" basis,\n#
+    WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for\n#
+    the specific language governing rights and limitations under the License.\n# \n#
+    The Original Source Code was developed by Robert Cowart. Portions created by\n#
+    Robert Cowart are Copyright (C)2020 Robert Cowart. All Rights Reserved.\n#------------------------------------------------------------------------------\n\nfilter
+    {\n  if [event][dataset] == \"ipfix\" {\n    # If flows are sent through a proxy
+    that adds exporterIPv4Address or exporterIPv6Address, then reset node.ipaddr and
+    node.hostname.\n      if [ipfix][exporterIPv4Address] or [ipfix][exporterIPv6Address]
+    {\n        if [ipfix][exporterIPv4Address] {\n          mutate {\n            replace
+    => {\n              \"[host][ip]\" => \"%{[ipfix][exporterIPv4Address]}\"\n              \"[host][name]\"
+    => \"%{[ipfix][exporterIPv4Address]}\"\n            }\n          }\n          mutate
+    {\n            remove_field => [ \"[ipfix][exporterIPv4Address]\" ]\n          }\n
+    \       } else if [ipfix][exporterIPv6Address] {\n          mutate {\n            replace
+    => {\n              \"[host][ip]\" => \"%{[ipfix][exporterIPv6Address]}\"\n              \"[host][name]\"
+    => \"%{[ipfix][exporterIPv6Address]}\"\n            }\n          }\n          mutate
+    {\n            remove_field => [ \"[ipfix][exporterIPv6Address]\" ]\n          }\n
+    \       }\n\n        if [@metadata][resolve_ip2host] == \"true\" or [@metadata][resolve_ip2host]
+    == \"exporters\" {\n          dns {\n            reverse => [ \"[host][name]\"
+    ]\n            action => \"replace\"\n            nameserver => \"${ELASTIFLOW_NAMESERVER:127.0.0.1}\"\n
+    \           hit_cache_size => \"${ELASTIFLOW_DNS_HIT_CACHE_SIZE:25000}\"\n            hit_cache_ttl
+    => \"${ELASTIFLOW_DNS_HIT_CACHE_TTL:900}\"\n            failed_cache_size => \"${ELASTIFLOW_DNS_FAILED_CACHE_SIZE:75000}\"\n
+    \           failed_cache_ttl => \"${ELASTIFLOW_DNS_FAILED_CACHE_TTL:3600}\"\n
+    \         }\n        }\n      }\n    \n    # Populate normalized ElastiFlow fields
+    with simple mapping from IPFIX flow fields.\n      mutate {\n        rename =>
+    {\n          \"[ipfix][protocolIdentifier]\" => \"[network][iana_number]\"\n          \"[ipfix][tcpControlBits]\"
+    => \"[flow][tcp_flags]\"\n          \"[ipfix][samplingFlowInterval]\" => \"[flow][sampling_interval]\"\n
+    \         \"[ipfix][sourceMacAddress]\" => \"[source][mac]\"\n          \"[ipfix][destinationMacAddress]\"
+    => \"[destination][mac]\"\n          \"[ipfix][vlanId]\" => \"[flow][vlan]\"\n
+    \         \"[ipfix][bgpValidityState]\" => \"[flow][bgp_valid_state]\"\n          \"[ipfix][postNAPTSourceTransportPort]\"
+    => \"[source][nat][port]\"\n          \"[ipfix][postNAPTDestinationTransportPort]\"
+    => \"[destination][nat][port]\"\n          \"[ipfix][flowDirection]\" => \"[flow][direction]\"\n
+    \         \"[ipfix][staMacAddress]\" => \"[flow][wifi_sta_mac]\"\n          \"[ipfix][wlanSSID]\"
+    => \"[flow][wifi_ssid]\"\n          \"[ipfix][wtpMacAddress]\" => \"[flow][wifi_wtp_mac]\"\n
+    \       }\n      }\n      mutate {\n        convert => {\n          \"[network][iana_number]\"
+    => \"integer\"\n          \"[flow][sampling_interval]\" => \"integer\"\n          \"[flow][tcp_flags]\"
+    => \"integer\"\n        }\n      }\n\n      if [ipfix][ipVersion] {\n        mutate
+    {\n          add_field => { \"[network][type]\" => \"ipv%{[ipfix][ipVersion]}\"
+    }\n        }\n        mutate {\n          remove_field => [ \"[ipfix][ipVersion]\"
+    ]\n        }\n      }\n\n    # Populate normalized ElastiFlow fields with IPv4
+    or IPv6 specific fields.\n      if [ipfix][sourceIPv4Address] or [ipfix][destinationIPv4Address]
+    or [ipfix][staIPv4Address] or [network][type] == \"ipv4\" {\n        # Looks like
+    an IPv4 flow.\n        if ![network][type] {\n          mutate {\n            add_field
+    => { \"[network][type]\" => \"ipv4\" }\n          }\n        }\n\n        mutate
+    {\n          rename => {\n            \"[ipfix][sourceIPv4Address]\" => \"[source][ip]\"\n
+    \           \"[ipfix][postNATSourceIPv4Address]\" => \"[source][nat][ip]\"\n            \"[ipfix][sourceIPv4PrefixLength]\"
+    => \"[flow][src_mask_len]\"\n            \"[ipfix][destinationIPv4Address]\" =>
+    \"[destination][ip]\"\n            \"[ipfix][postNATDestinationIPv4Address]\"
+    => \"[destination][nat][ip]\"\n            \"[ipfix][destinationIPv4PrefixLength]\"
+    => \"[flow][dst_mask_len]\"\n            \"[ipfix][ipNextHopIPv4Address]\" =>
+    \"[flow][next_hop]\"\n            \"[ipfix][bgpNextHopIPv4Address]\" => \"[flow][bgp_next_hop]\"\n
+    \           \"[ipfix][staIPv4Address]\" => \"[flow][wifi_sta_addr]\"\n          }\n
+    \       }\n      } else if [ipfix][sourceIPv6Address] or [ipfix][destinationIPv6Address]
+    or [ipfix][staIPv6Address] or [network][type] == \"ipv6\" {\n        # Looks like
+    an IPv6 flow.\n        if ![network][type] {\n          mutate {\n            add_field
+    => { \"[network][type]\" => \"ipv6\" }\n          }\n        }\n\n        mutate
+    {\n          rename => {\n            \"[ipfix][sourceIPv6Address]\" => \"[source][ip]\"\n
+    \           \"[ipfix][postNATSourceIPv6Address]\" => \"[source][nat][ip]\"\n            \"[ipfix][sourceIPv6PrefixLength]\"
+    => \"[flow][src_mask_len]\"\n            \"[ipfix][destinationIPv6Address]\" =>
+    \"[destination][ip]\"\n            \"[ipfix][postNATDestinationIPv6Address]\"
+    => \"[destination][nat][ip]\"\n            \"[ipfix][destinationIPv6PrefixLength]\"
+    => \"[flow][dst_mask_len]\"\n            \"[ipfix][ipNextHopIPv6Address]\" =>
+    \"[flow][next_hop]\"\n            \"[ipfix][bgpNextHopIPv6Address]\" => \"[flow][bgp_next_hop]\"\n
+    \           \"[ipfix][staIPv6Address]\" => \"[flow][wifi_sta_addr]\"\n          }\n
+    \       }\n      } else if [ipfix][cisco_avc_client_ipv4_addr] or [ipfix][cisco_avc_server_ipv4_addr]
+    {\n        # Looks like a Cisco AVC IPv4 flow.\n        if ![network][type] {\n
+    \         mutate {\n            add_field => { \"[network][type]\" => \"ipv4\"
+    }\n          }\n        }\n\n        if [ipfix][biflowDirection] == 1 {\n          mutate
+    {\n            rename => {\n              \"[ipfix][cisco_avc_client_ipv4_addr]\"
+    => \"[source][ip]\"\n              \"[ipfix][cisco_avc_server_ipv4_addr]\" =>
+    \"[destination][ip]\"\n              \"[ipfix][cisco_avc_server_l4_port]\" =>
+    \"[destination][port]\"\n            }\n            add_field => { \"[@metadata][isServer]\"
+    => \"dst\" }\n          }\n        } else if [ipfix][biflowDirection] == 2 {\n
+    \         mutate {\n            rename => {\n              \"[ipfix][cisco_avc_client_ipv4_addr]\"
+    => \"[destination][ip]\"\n              \"[ipfix][cisco_avc_server_ipv4_addr]\"
+    => \"[source][ip]\"\n              \"[ipfix][cisco_avc_server_l4_port]\" => \"[source][port]\"\n
+    \           }\n            add_field => { \"[@metadata][isServer]\" => \"src\"
+    }\n          }\n        }\n      } else if [ipfix][cisco_avc_client_ipv6_addr]
+    or [ipfix][cisco_avc_server_ipv6_addr] {\n        # Looks like a Cisco AVC IPv6
+    flow.\n        if ![network][type] {\n          mutate {\n            add_field
+    => { \"[network][type]\" => \"ipv6\" }\n          }\n        }\n\n        if [ipfix][biflowDirection]
+    == 1 {\n          mutate {\n            rename => {\n              \"[ipfix][cisco_avc_client_ipv6_addr]\"
+    => \"[source][ip]\"\n              \"[ipfix][cisco_avc_server_ipv6_addr]\" =>
+    \"[destination][ip]\"\n              \"[ipfix][cisco_avc_server_l4_port]\" =>
+    \"[destination][port]\"\n            }\n            add_field => { \"[@metadata][isServer]\"
+    => \"dst\" }\n          }\n        } else if [ipfix][biflowDirection] == 2 {\n
+    \         mutate {\n            rename => {\n              \"[ipfix][cisco_avc_client_ipv6_addr]\"
+    => \"[destination][ip]\"\n              \"[ipfix][cisco_avc_server_ipv6_addr]\"
+    => \"[source][ip]\"\n              \"[ipfix][cisco_avc_server_l4_port]\" => \"[source][port]\"\n
+    \           }\n            add_field => { \"[@metadata][isServer]\" => \"src\"
+    }\n          }\n        }\n      } else {\n        # Did not recognize IP version.\n
+    \       mutate {\n          add_tag => [ \"__ipfix_ip_version_not_recognized\"
+    ]\n          remove_field => [ \"[network][type]\" ]\n        }\n      }\n\n      if
+    [ipfix][biflowDirection] {\n        translate {\n          dictionary => {\n            \"1\"
+    => \"dst\"\n            \"2\" => \"src\"\n          }\n          field => \"[ipfix][biflowDirection]\"\n
+    \         destination => \"[@metadata][isServer]\"\n          override => true\n
+    \       }\n      }\n\n    # Populate source.ip from flow.wifi_sta_addr if not
+    present\n      if ![source][ip] and [flow][wifi_sta_addr] {\n        mutate {\n
+    \         add_field => { \"[source][ip]\" => \"%{[flow][wifi_sta_addr]}\" }\n
+    \       }\n      }\n\n    # Populate normalized ElastiFlow fields with source
+    protocol port.\n      if [ipfix][sourceTransportPort] {\n        mutate {\n          rename
+    => { \"[ipfix][sourceTransportPort]\" => \"[source][port]\" }\n        }\n      }
+    else if [ipfix][tcpSourcePort] {\n        mutate {\n          rename => { \"[ipfix][tcpSourcePort]\"
+    => \"[source][port]\" }\n        }\n      } else if [ipfix][udpSourcePort] {\n
+    \       mutate {\n          rename => { \"[ipfix][udpSourcePort]\" => \"[source][port]\"
+    }\n        }\n      }\n      if [source][port] {\n        mutate {\n          convert
+    => { \"[source][port]\" => \"integer\" }\n        }\n      }\n\n    # Populate
+    normalized ElastiFlow fields with destination protocol port.\n      if [ipfix][destinationTransportPort]
+    {\n        mutate {\n          rename => { \"[ipfix][destinationTransportPort]\"
+    => \"[destination][port]\" }\n        }\n      } else if [ipfix][tcpDestinationPort]
+    {\n        mutate {\n          rename => { \"[ipfix][tcpDestinationPort]\" =>
+    \"[destination][port]\" }\n        }\n      } else if [ipfix][udpDestinationPort]
+    {\n        mutate {\n          rename => { \"[ipfix][udpDestinationPort]\" =>
+    \"[destination][port]\" }\n        }\n      }\n      if [destination][port] {\n
+    \       mutate {\n          convert => { \"[destination][port]\" => \"integer\"
+    }\n        }\n      }\n\n    # Populate normalized ElastiFlow fields with ingress
+    interface index.\n      if [ipfix][ingressInterface] {\n        mutate {\n          rename
+    => { \"[ipfix][ingressInterface]\" => \"[flow][input_snmp]\" }\n        }\n        mutate
+    {\n          convert => { \"[flow][input_snmp]\" => \"integer\" }\n        }\n
+    \     } else if [ipfix][ingressPhysicalInterface] {\n        mutate {\n          rename
+    => { \"[ipfix][ingressPhysicalInterface]\" => \"[flow][input_snmp]\" }\n        }\n
+    \       mutate {\n          convert => { \"[flow][input_snmp]\" => \"integer\"
+    }\n        }\n      }\n\n    # Populate normalized ElastiFlow fields with egress
+    interface index.\n      if [ipfix][egressInterface] {\n        mutate {\n          rename
+    => { \"[ipfix][egressInterface]\" => \"[flow][output_snmp]\" }\n        }\n        mutate
+    {\n          convert => { \"[flow][output_snmp]\" => \"integer\" }\n        }\n
+    \     } else if [ipfix][egressPhysicalInterface] {\n        mutate {\n          rename
+    => { \"[ipfix][egressPhysicalInterface]\" => \"[flow][output_snmp]\" }\n        }\n
+    \       mutate {\n          convert => { \"[flow][output_snmp]\" => \"integer\"
+    }\n        }\n      }\n\n    # Populate normalized ElastiFlow fields with TOS
+    value if available.\n      if [ipfix][ipDiffServCodePoint] {\n        mutate {\n
+    \         rename => { \"[ipfix][ipDiffServCodePoint]\" => \"[flow][tos]\" }\n
+    \       }\n      } else if [ipfix][ipPrecedence] {\n        mutate {\n          rename
+    => { \"[ipfix][ipPrecedence]\" => \"[flow][tos]\" }\n        }\n      } else if
+    [ipfix][ipClassOfService] {\n        mutate {\n          rename => { \"[ipfix][ipClassOfService]\"
+    => \"[flow][tos]\" }\n        }\n      }\n\n    # Populate normalized ElastiFlow
+    fields with flow directiom (ingress/egress).\n      if [flow][direction] {\n        translate
+    {\n          dictionary => {\n            \"0\" => \"ingress\"\n            \"1\"
+    => \"egress\"\n          }\n          field => \"[flow][direction]\"\n          destination
+    => \"[flow][direction]\"\n          override => true\n          fallback => \"undetermined\"\n
+    \         refresh_behaviour => \"replace\"\n        }\n      } else if [ipfix][ziften_inbound]
+    {\n        translate {\n          dictionary => {\n            \"0\" => \"egress\"\n
+    \           \"1\" => \"ingress\"\n          }\n          field => \"[ipfix][ziften_inbound]\"\n
+    \         destination => \"[flow][direction]\"\n          override => true\n          fallback
+    => \"undetermined\"\n          refresh_behaviour => \"replace\"\n        }\n        mutate
+    {\n          remove_field => [ \"[ipfix][ziften_inbound]\" ]\n        }\n      }
+    else {\n        mutate {\n          replace => { \"[flow][direction]\" => \"unspecified\"
+    }\n        }\n      }\n\n    # Populate normalized ElastiFlow fields with bytes
+    if available.\n      if [ipfix][octetDeltaCount] {\n        if [ipfix][reverseOctetDeltaCount]
+    {\n          ruby {\n            code => \"\n              event.set( '[network][bytes]',
+    event.get('[ipfix][octetDeltaCount]').to_i + event.get('[ipfix][reverseOctetDeltaCount]').to_i
+    )\n              event.set( '[source][bytes]', event.get('[ipfix][octetDeltaCount]').to_i)\n
+    \             event.set( '[destination][bytes]', event.get('[ipfix][reverseOctetDeltaCount]').to_i
+    )\n            \"\n          }\n        } else {\n          mutate {\n            replace
+    => {\n              \"[network][bytes]\" => \"%{[ipfix][octetDeltaCount]}\"\n
+    \             \"[source][bytes]\" => \"%{[ipfix][octetDeltaCount]}\"\n            }\n
+    \         }\n        }\n      } else if [ipfix][reverseOctetDeltaCount] {\n        mutate
+    {\n          replace => {\n            \"[network][bytes]\" => \"%{[ipfix][reverseOctetDeltaCount]}\"\n
+    \           \"[destination][bytes]\" => \"%{[ipfix][reverseOctetDeltaCount]}\"\n
+    \         }\n        }\n      } else if [ipfix][initiatorOctets] {\n        if
+    [ipfix][responderOctets] {\n          if [@metadata][isServer] == \"src\" {\n
+    \           ruby {\n              code => \"\n                event.set( '[network][bytes]',
+    event.get('[ipfix][initiatorOctets]').to_i + event.get('[ipfix][responderOctets]').to_i
+    )\n                event.set( '[source][bytes]', event.get('[ipfix][responderOctets]').to_i
+    )\n                event.set( '[destination][bytes]', event.get('[ipfix][initiatorOctets]').to_i
+    )\n              \"\n            }\n          } else {\n            ruby {\n              code
+    => \"\n                event.set( '[network][bytes]', event.get('[ipfix][initiatorOctets]').to_i
+    + event.get('[ipfix][responderOctets]').to_i )\n                event.set( '[source][bytes]',
+    event.get('[ipfix][initiatorOctets]').to_i )\n                event.set( '[destination][bytes]',
+    event.get('[ipfix][responderOctets]').to_i )\n              \"\n            }\n
+    \         }\n        } else {\n          if [@metadata][isServer] == \"src\" {\n
+    \           mutate {\n              replace => {\n                \"[network][bytes]\"
+    => \"%{[ipfix][initiatorOctets]}\"\n                \"[destination][bytes]\" =>
+    \"%{[ipfix][initiatorOctets]}\"\n              }\n            }\n          } else
+    {\n            mutate {\n              replace => {\n                \"[network][bytes]\"
+    => \"%{[ipfix][initiatorOctets]}\"\n                \"[source][bytes]\" => \"%{[ipfix][initiatorOctets]}\"\n
+    \             }\n            }\n          }\n        }\n      } else if [ipfix][responderOctets]
+    {\n        if [@metadata][isServer] == \"src\" {\n          mutate {\n            replace
+    => {\n              \"[network][bytes]\" => \"%{[ipfix][responderOctets]}\"\n
+    \             \"[source][bytes]\" => \"%{[ipfix][responderOctets]}\"\n            }\n
+    \         }\n        } else {\n          mutate {\n            replace => {\n
+    \             \"[network][bytes]\" => \"%{[ipfix][responderOctets]}\"\n              \"[destination][bytes]\"
+    => \"%{[ipfix][responderOctets]}\"\n            }\n          }\n        }\n      }
+    else if [ipfix][cisco_avc_client_bytes] {\n        if [ipfix][cisco_avc_server_bytes]
+    {\n          if [@metadata][isServer] == \"src\" {\n            ruby {\n              code
+    => \"\n                event.set( '[network][bytes]', event.get('[ipfix][cisco_avc_client_bytes]').to_i
+    + event.get('[ipfix][cisco_avc_server_bytes]').to_i )\n                event.set(
+    '[source][bytes]', event.get('[ipfix][cisco_avc_server_bytes]').to_i )\n                event.set(
+    '[destination][bytes]', event.get('[ipfix][cisco_avc_client_bytes]').to_i )\n
+    \             \"\n            }\n          } else {\n            ruby {\n              code
+    => \"\n                event.set( '[network][bytes]', event.get('[ipfix][cisco_avc_client_bytes]').to_i
+    + event.get('[ipfix][cisco_avc_server_bytes]').to_i )\n                event.set(
+    '[source][bytes]', event.get('[ipfix][cisco_avc_client_bytes]').to_i )\n                event.set(
+    '[destination][bytes]', event.get('[ipfix][cisco_avc_server_bytes]').to_i )\n
+    \             \"\n            }\n          }\n        } else {\n          if [@metadata][isServer]
+    == \"src\" {\n            mutate {\n              replace => {\n                \"[network][bytes]\"
+    => \"%{[ipfix][cisco_avc_client_bytes]}\"\n                \"[destination][bytes]\"
+    => \"%{[ipfix][cisco_avc_client_bytes]}\"\n              }\n            }\n          }
+    else {\n            mutate {\n              replace => {\n                \"[network][bytes]\"
+    => \"%{[ipfix][cisco_avc_client_bytes]}\"\n                \"[source][bytes]\"
+    => \"%{[ipfix][cisco_avc_client_bytes]}\"\n              }\n            }\n          }\n
+    \       }\n      } else if [ipfix][cisco_avc_server_bytes] {\n        if [@metadata][isServer]
+    == \"src\" {\n          mutate {\n            replace => {\n              \"[network][bytes]\"
+    => \"%{[ipfix][cisco_avc_server_bytes]}\"\n              \"[source][bytes]\" =>
+    \"%{[ipfix][cisco_avc_server_bytes]}\"\n            }\n          }\n        }
+    else {\n          mutate {\n            replace => {\n              \"[network][bytes]\"
+    => \"%{[ipfix][cisco_avc_server_bytes]}\"\n              \"[destination][bytes]\"
+    => \"%{[ipfix][cisco_avc_server_bytes]}\"\n            }\n          }\n        }\n
+    \     }\n      if [network][bytes] {\n        mutate {\n          convert => {\n
+    \           \"[network][bytes]\" => \"integer\"\n            \"[source][bytes]\"
+    => \"integer\"\n            \"[destination][bytes]\" => \"integer\"\n          }\n
+    \       }\n      }\n\n    # Populate normalized ElastiFlow fields with packets
+    if available.\n      if [ipfix][packetDeltaCount] {\n        if [ipfix][reversePacketDeltaCount]
+    {\n          ruby {\n            code => \"\n              event.set( '[network][packets]',
+    event.get('[ipfix][packetDeltaCount]').to_i + event.get('[ipfix][reversePacketDeltaCount]').to_i
+    )\n              event.set( '[source][packets]', event.get('[ipfix][packetDeltaCount]').to_i)\n
+    \             event.set( '[destination][packets]', event.get('[ipfix][reversePacketDeltaCount]').to_i
+    )\n            \"\n          }\n        } else {\n          mutate {\n            replace
+    => {\n              \"[network][packets]\" => \"%{[ipfix][packetDeltaCount]}\"\n
+    \             \"[source][packets]\" => \"%{[ipfix][packetDeltaCount]}\"\n            }\n
+    \         }\n        }\n      } else if [ipfix][reversePacketDeltaCount] {\n        mutate
+    {\n          replace => {\n            \"[network][packets]\" => \"%{[ipfix][reversePacketDeltaCount]}\"\n
+    \           \"[destination][packets]\" => \"%{[ipfix][reversePacketDeltaCount]}\"\n
+    \         }\n        }\n      } else if [ipfix][initiatorPackets] {\n        if
+    [ipfix][responderPackets] {\n          if [@metadata][isServer] == \"src\" {\n
+    \           ruby {\n              code => \"\n                event.set( '[network][packets]',
+    event.get('[ipfix][initiatorPackets]').to_i + event.get('[ipfix][responderPackets]').to_i
+    )\n                event.set( '[source][packets]', event.get('[ipfix][responderPackets]').to_i
+    )\n                event.set( '[destination][packets]', event.get('[ipfix][initiatorPackets]').to_i
+    )\n              \"\n            }\n          } else {\n            ruby {\n              code
+    => \"\n                event.set( '[network][packets]', event.get('[ipfix][initiatorPackets]').to_i
+    + event.get('[ipfix][responderPackets]').to_i )\n                event.set( '[source][packets]',
+    event.get('[ipfix][initiatorPackets]').to_i )\n                event.set( '[destination][packets]',
+    event.get('[ipfix][responderPackets]').to_i )\n              \"\n            }\n
+    \         }\n        } else {\n          if [@metadata][isServer] == \"src\" {\n
+    \           mutate {\n              replace => {\n                \"[network][packets]\"
+    => \"%{[ipfix][initiatorPackets]}\"\n                \"[destination][packets]\"
+    => \"%{[ipfix][initiatorPackets]}\"\n              }\n            }\n          }
+    else {\n            mutate {\n              replace => {\n                \"[network][packets]\"
+    => \"%{[ipfix][initiatorPackets]}\"\n                \"[source][packets]\" =>
+    \"%{[ipfix][initiatorPackets]}\"\n              }\n            }\n          }\n
+    \       }\n      } else if [ipfix][responderOctets] {\n        if [@metadata][isServer]
+    == \"src\" {\n          mutate {\n            replace => {\n              \"[network][packets]\"
+    => \"%{[ipfix][responderPackets]}\"\n              \"[source][packets]\" => \"%{[ipfix][responderPackets]}\"\n
+    \           }\n          }\n        } else {\n          mutate {\n            replace
+    => {\n              \"[network][packets]\" => \"%{[ipfix][responderPackets]}\"\n
+    \             \"[destination][packets]\" => \"%{[ipfix][responderPackets]}\"\n
+    \           }\n          }\n        }\n      }\n      if [network][packets] {\n
+    \       mutate {\n          convert => {\n            \"[network][packets]\" =>
+    \"integer\"\n            \"[source][packets]\" => \"integer\"\n            \"[destination][packets]\"
+    => \"integer\"\n          }\n        }\n      }\n    \n    # If sampled IPFIX,
+    adjust Bytes and Packets accordingly.\n      # Workaround for sampled flows when
+    the sampling interval is not set\n      if ![flow][sampling_interval] {\n        translate
+    {\n          dictionary_path => \"${ELASTIFLOW_USER_SETTINGS_PATH:/etc/logstash/elastiflow/user_settings}/sampling_interval.yml\"\n
+    \         field => \"[host][ip]\"\n          destination => \"[flow][sampling_interval]\"\n
+    \         fallback => \"0\"\n          refresh_behaviour => \"replace\"\n        }\n
+    \       mutate {\n          convert => { \"[flow][sampling_interval]\" => \"integer\"
+    }\n        }\n      }\n      \n      if [flow][sampling_interval] {\n        if
+    [network][bytes] and [flow][sampling_interval] > 0 {\n          ruby {\n            code
+    => \"\n              event.set( '[network][bytes]', event.get('[network][bytes]').to_i
+    * event.get('[flow][sampling_interval]').to_i )\n              event.set( '[source][bytes]',
+    event.get('[source][bytes]').to_i * event.get('[flow][sampling_interval]').to_i
+    )\n              event.set( '[destination][bytes]', event.get('[destination][bytes]').to_i
+    * event.get('[flow][sampling_interval]').to_i )\n            \"\n          }\n
+    \       }\n        if [network][packets] and [flow][sampling_interval] > 0 {\n
+    \         ruby {\n            code => \"\n              event.set( '[network][packets]',
+    event.get('[network][packets]').to_i * event.get('[flow][sampling_interval]').to_i
+    )\n              event.set( '[source][packets]', event.get('[source][packets]').to_i
+    * event.get('[flow][sampling_interval]').to_i )\n              event.set( '[destination][packets]',
+    event.get('[destination][packets]').to_i * event.get('[flow][sampling_interval]').to_i
+    )\n            \"\n          }\n        }\n      }\n\n    # Populate normalized
+    ElastiFlow fields for applications if available.\n      if [ipfix][applicationName]
+    {\n        mutate {\n          rename => { \"[ipfix][applicationName]\" => \"[network][application]\"
+    }\n          remove_field => [ \"[ipfix][applicationId]\" ]\n        }\n      }
+    else if [ipfix][applicationId] {\n        if [ipfix][applicationId] =~ /^.*:[0-9]+$/
+    {\n          mutate {\n            gsub => [ \"[ipfix][applicationId]\", \":\",
+    \"..\" ]\n          }\n        }\n\n        if [ipfix][applicationId] != \"0..0\"
+    {\n          translate {\n            dictionary_path => \"${ELASTIFLOW_USER_SETTINGS_PATH:/etc/logstash/elastiflow/user_settings}/app_id.srctype.yml\"\n
+    \           field => \"[host][ip]\"\n            destination => \"[@metadata][appid_srctype]\"\n
+    \           fallback => \"${ELASTIFLOW_DEFAULT_APPID_SRCTYPE:__UNKNOWN}\"\n            refresh_behaviour
+    => \"replace\"\n          }\n\n          if [@metadata][appid_srctype] == \"fortinet\"
+    {\n            if [@metadata][appid_srctype] =~ /^[0-9]+\\.\\.[0-9]+\\.\\.[0-9]+$/
+    {\n              mutate {\n                gsub => [ \"[ipfix][applicationId]\",
+    \"[0-9]+\\.\\.[0-9]+\\.\\.\", \"0..\" ]\n              }\n            }\n          }\n\n
+    \         if [@metadata][appid_srctype] != \"__UNKNOWN\" {\n            mutate
+    {\n              add_field => { \"[@metadata][appid_key]\" => \"%{[@metadata][appid_srctype]}__%{[ipfix][applicationId]}\"
+    }\n            }\n            translate {\n              dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/app_id.yml\"\n
+    \             field => \"[@metadata][appid_key]\"\n              destination =>
+    \"[network][application]\"\n              fallback => \"%{[ipfix][applicationId]}\"\n
+    \             refresh_behaviour => \"replace\"\n            }\n            mutate
+    {\n              remove_field => [ \"[ipfix][applicationId]\" ]\n            }\n
+    \         } else {\n            mutate {\n              rename => { \"[ipfix][applicationId]\"
+    => \"[network][application]\" }\n            }\n          }\n        } else {\n
+    \         mutate {\n            remove_field => [ \"[ipfix][applicationId]\" ]\n
+    \         }\n        }\n      } else if [ipfix][ixia_l7_app] {\n        mutate
+    {\n          rename => { \"[ipfix][ixia_l7_app]\" => \"[network][application]\"
+    }\n        }\n      } else if [ipfix][netscaler_app] {\n        mutate {\n          rename
+    => { \"[ipfix][netscaler_app]\" => \"[network][application]\" }\n        }\n      }
+    else if [ipfix][ntop_l7_proto_name] {\n        mutate {\n          rename => {
+    \"[ipfix][ntop_l7_proto_name]\" => \"[network][application]\" }\n        }\n      }
+    else if [ipfix][pan_app] {\n        mutate {\n          rename => { \"[ipfix][pan_app]\"
+    => \"[network][application]\" }\n        }\n      } else if [ipfix][ziften_command]
+    {\n        mutate {\n          rename => { \"[ipfix][ziften_command]\" => \"[network][application]\"
+    }\n        }\n      } else if [ipfix][sophos_afc_proto] {\n        translate {\n
+    \         dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/sophos_app_id.yml\"\n
+    \         field => \"[ipfix][sophos_afc_proto]\"\n          destination => \"[network][application]\"\n
+    \         fallback => \"Sophos: %{[ipfix][sophos_afc_proto]}\"\n          refresh_behaviour
+    => \"replace\"\n        }\n      } else if [ipfix][sonic_app] {\n        mutate
+    {\n          rename => { \"[ipfix][sonic_app]\" => \"[network][application]\"
+    }\n        }\n      } else if [ipfix][sonic_app_id] {\n        translate {\n          dictionary_path
+    => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/sonicwall_app_id.yml\"\n
+    \         field => \"[ipfix][sonic_app_id]\"\n          destination => \"[network][application]\"\n
+    \         fallback => \"SonicWall: %{[ipfix][sonic_app_id]}\"\n          refresh_behaviour
+    => \"replace\"\n        }\n      }\n  }\n}\n"
+  20_filter_40_sflow.logstash.conf: "#------------------------------------------------------------------------------\n#
+    Copyright (C)2020 Robert Cowart\n# \n# The contents of this file and/or repository
+    are subject to the Robert Cowart\n# Public License (the \"License\") and may not
+    be used or distributed except in\n# compliance with the License. You may obtain
+    a copy of the License at:\n# \n# http://www.koiossian.com/public/robert_cowart_public_license.txt\n#
+    \n# Software distributed under the License is distributed on an \"AS IS\" basis,\n#
+    WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for\n#
+    the specific language governing rights and limitations under the License.\n# \n#
+    The Original Source Code was developed by Robert Cowart. Portions created by\n#
+    Robert Cowart are Copyright (C)2020 Robert Cowart. All Rights Reserved.\n#------------------------------------------------------------------------------\n\nfilter
+    {\n  if [event][dataset] == \"sflow\" {\n    # Process sFlow flow sample events.\n
+    \   if [sflow_type] == \"flow_sample\" or [sflow_type] == \"expanded_flow_sample\"
+    {\n      # Adjust value of host fields if flow records came from a proxy.\n        if
+    [agent_ip] {\n          if [agent_ip] != [host][ip] {\n            mutate {\n
+    \             replace => {\n                \"[host][ip]\" => \"%{[agent_ip]}\"\n
+    \               \"[host][name]\" => \"%{[agent_ip]}\"\n              }\n            }\n
+    \           if [@metadata][resolve_ip2host] == \"true\" or [@metadata][resolve_ip2host]
+    == \"exporters\" {\n              dns {\n                reverse => [ \"[host][name]\"
+    ]\n                action => \"replace\"\n                nameserver => \"${ELASTIFLOW_NAMESERVER:127.0.0.1}\"\n
+    \               hit_cache_size => \"${ELASTIFLOW_DNS_HIT_CACHE_SIZE:25000}\"\n
+    \               hit_cache_ttl => \"${ELASTIFLOW_DNS_HIT_CACHE_TTL:900}\"\n                failed_cache_size
+    => \"${ELASTIFLOW_DNS_FAILED_CACHE_SIZE:75000}\"\n                failed_cache_ttl
+    => \"${ELASTIFLOW_DNS_FAILED_CACHE_TTL:3600}\"\n              }\n            }\n
+    \         }\n          mutate {\n            remove_field => [ \"[agent_ip]\"
+    ]\n          }\n        }\n\n      # Restructure common sFlow data into an object.\n
+    \       mutate {\n          rename => {\n            #\"agent_ip\" => \"[sflow][agent_ip]\"\n
+    \           #\"flow_sequence_number\" => \"[sflow][flow_sequence_number]\"\n            #\"header_size\"
+    => \"[sflow][header_size]\"\n            #\"ip_checksum\" => \"[sflow][ip_checksum]\"\n
+    \           #\"ip_fragment_offset\" => \"[sflow][ip_fragment_offset]\"\n            #\"ip_header_length\"
+    => \"[sflow][ip_header_length]\"\n            #\"ip_identification\" => \"[sflow][ip_identification]\"\n
+    \           #\"ip_total_length\" => \"[sflow][ip_total_length]\"\n            #\"padded\"
+    => \"[sflow][padded]\"\n            #\"sample_pool\" => \"[sflow][sample_pool]\"\n
+    \           #\"sample_seq_number\" => \"[sflow][sample_seq_number]\"\n            #\"sequence_number\"
+    => \"[sflow][sequence_number]\"\n            #\"sflow_version\" => \"[sflow][sflow_version]\"\n
+    \           #\"size_header\" => \"[sflow][size_header]\"\n            #\"stripped\"
+    => \"[sflow][stripped]\"\n            #\"tcp_ack_number\" => \"[sflow][tcp_ack_number]\"\n
+    \           #\"tcp_checksum\" => \"[sflow][tcp_checksum]\"\n            #\"tcp_header_length\"
+    => \"[sflow][tcp_header_length]\"\n            #\"tcp_is_ack\" => \"[sflow][tcp_is_ack]\"\n
+    \           #\"tcp_is_cwr\" => \"[sflow][tcp_is_cwr]\"\n            #\"tcp_is_ecn_echo\"
+    => \"[sflow][tcp_is_ecn_echo]\"\n            #\"tcp_is_fin\" => \"[sflow][tcp_is_fin]\"\n
+    \           #\"tcp_is_nonce\" => \"[sflow][tcp_is_nonce]\"\n            #\"tcp_is_push\"
+    => \"[sflow][tcp_is_push]\"\n            #\"tcp_is_reset\" => \"[sflow][tcp_is_reset]\"\n
+    \           #\"tcp_is_syn\" => \"[sflow][tcp_is_syn]\"\n            #\"tcp_is_urgent\"
+    => \"[sflow][tcp_is_urgent]\"\n            #\"tcp_reserved\" => \"[sflow][tcp_reserved]\"\n
+    \           #\"tcp_seq_number\" => \"[sflow][tcp_seq_number]\"\n            #\"udp_checksum\"
+    => \"[sflow][udp_checksum]\"\n            #\"udp_length\" => \"[sflow][udp_length]\"\n
+    \           #\"uptime_in_ms\" => \"[sflow][uptime_in_ms]\"\n            \"drops\"
+    => \"[sflow][drops]\"\n            \"dst_ip\" => \"[destination][ip]\"\n            \"dst_mac\"
+    => \"[sflow][dst_mac]\"\n            \"dst_mask_len\" => \"[flow][dst_mask_len]\"\n
+    \           \"dst_port\" => \"[destination][port]\"\n            \"dst_priority\"
+    => \"[sflow][dst_priority]\"\n            \"dst_vlan\" => \"[sflow][dst_vlan]\"\n
+    \           \"eth_dst\" => \"[sflow][eth_dst]\"\n            \"eth_src\" => \"[sflow][eth_src]\"\n
+    \           \"eth_type\" => \"[sflow][eth_type]\"\n            \"frame_length\"
+    => \"[sflow][frame_length]\"\n            \"frame_length_times_sampling_rate\"
+    => \"[network][bytes]\"\n            \"input_interface\" => \"[flow][input_snmp]\"\n
+    \           \"input_interface_format\" => \"[sflow][input_interface_format]\"\n
+    \           \"input_interface_value\" => \"[flow][input_snmp]\"\n            \"ip_address_next_hop_router\"
+    => \"[flow][next_hop]\"\n            \"ip_dscp\" => \"[sflow][ip_dscp]\"\n            \"ip_ecn\"
+    => \"[sflow][ip_ecn]\"\n            \"ip_flags\" => \"[sflow][ip_flags]\"\n            \"ip_next_header\"
+    => \"[sflow][ip_next_header]\"\n            \"ip_options\" => \"[sflow][ip_options]\"\n
+    \           \"ip_packet_length\" => \"[sflow][ip_packet_length]\"\n            \"ip_priority\"
+    => \"[sflow][ip_priority]\"\n            \"ip_protocol\" => \"[network][iana_number]\"\n
+    \           \"ip_ttl\" => \"[sflow][ip_ttl]\"\n            \"ip_type\" => \"[sflow][ip_type]\"\n
+    \           \"ip_version\" => \"[network][type]\"\n            \"output_interface\"
+    => \"[flow][output_snmp]\"\n            \"output_interface_format\" => \"[sflow][output_interface_format]\"\n
+    \           \"output_interface_value\" => \"[flow][output_snmp]\"\n            \"packet_length\"
+    => \"[sflow][packet_length]\"\n            \"protocol\" => \"[sflow][protocol]\"\n
+    \           \"sample_length\" => \"[sflow][sample_length]\"\n            \"sampling_rate\"
+    => \"[flow][sampling_interval]\"\n            \"sflow_type\" => \"[sflow][sflow_type]\"\n
+    \           \"source_id_index\" => \"[sflow][source_id_index]\"\n            \"source_id_type\"
+    => \"[sflow][source_id_type]\"\n            \"src_ip\" => \"[source][ip]\"\n            \"src_mac\"
+    => \"[sflow][src_mac]\"\n            \"src_mask_len\" => \"[flow][src_mask_len]\"\n
+    \           \"src_port\" => \"[source][port]\"\n            \"src_priority\" =>
+    \"[sflow][src_priority]\"\n            \"src_vlan\" => \"[sflow][src_vlan]\"\n
+    \           \"sub_agent_id\" => \"[sflow][sub_agent_id]\"\n            \"tcp_options\"
+    => \"[sflow][tcp_options]\"\n            \"tcp_urgent_pointer\" => \"[sflow][tcp_urgent_pointer]\"\n
+    \           \"tcp_window_size\" => \"[sflow][tcp_window_size]\"\n            \"vlan_cfi\"
+    => \"[sflow][vlan_cfi]\"\n            \"vlan_id\" => \"[sflow][vlan_id]\"\n            \"vlan_priority\"
+    => \"[sflow][vlan_priority]\"\n            \"vlan_type\" => \"[sflow][vlan_type]\"\n
+    \         }\n        }\n        mutate {\n          add_field => { \"[source][bytes]\"
+    => \"%{[network][bytes]}\" }\n        }\n\n      # Set flow.tcp_flags\n        ruby
+    {\n          code => \"event.set('[flow][tcp_flags]', event.get('[tcp_is_fin]').to_i
+    + (event.get('[tcp_is_syn]').to_i * 2) + (event.get('[tcp_is_reset]').to_i * 4)
+    + (event.get('[tcp_is_push]').to_i * 8) + (event.get('[tcp_is_ack]').to_i * 16)
+    + (event.get('[tcp_is_urgent]').to_i * 32) + (event.get('[tcp_is_ecn_echo]').to_i
+    * 64) + (event.get('[tcp_is_cwr]').to_i * 128));\"\n        }\n\n        mutate
+    {\n          convert => {\n            \"[network][iana_number]\" => \"integer\"\n
+    \           \"[source][port]\" => \"integer\"\n            \"[destination][port]\"
+    => \"integer\"\n            \"[network][bytes]\" => \"integer\"\n            \"[source][bytes]\"
+    => \"integer\"\n            \"[flow][sampling_interval]\" => \"integer\"\n            \"[flow][tcp_flags]\"
+    => \"integer\"\n            \"[flow][input_snmp]\" => \"integer\"\n            \"[flow][output_snmp]\"
+    => \"integer\"\n          }\n          remove_field => [ \"[tcp_is_fin]\", \"[tcp_is_syn]\",
+    \"[tcp_is_reset]\", \"[tcp_is_push]\", \"[tcp_is_ack]\", \"[tcp_is_urgent]\",
+    \"[tcp_is_ecn_echo]\", \"[tcp_is_cwr]\", \"[tcp_is_nonce]\" ]\n        }\n\n      #
+    Determine sample direction.\n        if [sflow][source_id_type] == 0 {\n          if
+    [sflow][source_id_index] == [flow][input_snmp] {\n            mutate {\n              add_field
+    => { \"[flow][direction]\" => \"ingress\" }\n            }\n          } else if
+    [sflow][source_id_index] == [flow][output_snmp] {\n            mutate {\n              add_field
+    => { \"[flow][direction]\" => \"egress\" }\n            }\n          } else {\n
+    \           mutate {\n              add_field => { \"[flow][direction]\" => \"undetermined\"
+    }\n            }\n          }\n        }\n\n      # lookup source ID type to find
+    the a value for source_id_type.\n        if [sflow][source_id_type] {\n          translate
+    {\n            dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/sflow_source_id_type.yml\"\n
+    \           field => \"[sflow][source_id_type]\"\n            destination => \"[sflow][source_id_type]\"\n
+    \           fallback => \"UNKNOWN(%{[sflow][source_id_type]})\"\n            override
+    => true\n            refresh_behaviour => \"replace\"\n          }\n        }\n\n
+    \     # Populate normalized ElastiFlow fields with simple mapping from sFlow flow
+    sample.\n        if [network][type] == \"4\" or [network][type] == \"6\" {\n          mutate
+    {\n            replace => { \"[network][type]\" => \"ipv%{[network][type]}\" }\n
+    \         }\n        } else {\n          # Did not recognize IP version.\n          mutate
+    {\n            add_tag => [ \"__sflow_ip_version_not_recognized\" ]\n            replace
+    => { \"[network][type]\" => \"undetermined\" }\n          }\n        }\n\n      #
+    Estimate packets from sampling rate.\n        if [flow][sampling_interval] {\n
+    \         mutate {\n            add_field => { \"[network][packets]\" => \"%{[flow][sampling_interval]}\"
+    }\n          }\n          mutate {\n            convert => { \"[network][packets]\"
+    => \"integer\" }\n          }\n        }\n\n      # Populate normalized ElastiFlow
+    fields with source and destination MAC addresses if available.\n        if [sflow][eth_src]
+    {\n          mutate {\n            rename => { \"[sflow][eth_src]\" => \"[source][mac]\"
+    }\n          }\n        } else if [sflow][src_mac] {\n          mutate {\n            rename
+    => { \"[sflow][src_mac]\" => \"[source][mac]\" }\n          }\n        }\n        if
+    [sflow][eth_dst] {\n          mutate {\n            rename => { \"[sflow][eth_dst]\"
+    => \"[destination][mac]\" }\n          }\n        } else if [sflow][dst_mac] {\n
+    \         mutate {\n            rename => { \"[sflow][dst_mac]\" => \"[destination][mac]\"
+    }\n          }\n        }\n\n      # Populate normalized ElastiFlow fields with
+    source VLAN if available.\n        if [sflow][vlan_id] {\n          mutate {\n
+    \           rename => { \"[sflow][vlan_id]\" => \"[flow][vlan]\" }\n          }\n
+    \         if [flow][vlan] == [sflow][src_vlan] {\n            mutate {\n              remove_field
+    => [ \"[sflow][src_vlan]\" ]\n            }\n          }\n          if [flow][vlan]
+    == [sflow][dst_vlan] {\n            mutate {\n              remove_field => [
+    \"[sflow][dst_vlan]\" ]\n            }\n          }\n        } else if [sflow][src_vlan]
+    {\n          mutate {\n            rename => { \"[sflow][src_vlan]\" => \"[flow][vlan]\"
+    }\n          }\n          if [flow][vlan] == [sflow][dst_vlan] {\n            mutate
+    {\n              remove_field => [ \"[sflow][dst_vlan]\" ]\n            }\n          }\n
+    \       } else if [sflow][dst_vlan] {\n          mutate {\n            rename
+    => { \"[sflow][dst_vlan]\" => \"[flow][vlan]\" }\n          }\n        }\n\n      #
+    Populate normalized ElastiFlow fields with TOS value if available.\n        if
+    [sflow][ip_dscp] {\n          mutate {\n            rename => { \"[sflow][ip_dscp]\"
+    => \"[flow][tos]\" }\n          }\n        } else if [sflow][dst_priority] {\n
+    \         mutate {\n            rename => { \"[sflow][dst_priority]\" => \"[flow][tos]\"
+    }\n          }\n          if [flow][tos] == [sflow][src_priority] {\n            mutate
+    {\n              remove_field => [ \"[sflow][src_priority]\" ]\n            }\n
+    \         }\n        } else if [sflow][src_priority] {\n          mutate {\n            rename
+    => { \"[sflow][src_priority]\" => \"[flow][tos]\" }\n          }\n        } else
+    if [sflow][ip_priority] {\n          mutate {\n            rename => { \"[sflow][ip_priority]\"
+    => \"[flow][tos]\" }\n          }\n        }\n\n      if [sflow][protocol] {\n
+    \       translate {\n          dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/sflow_header_protocol.yml\"\n
+    \         field => \"[sflow][protocol]\"\n          destination => \"[sflow][protocol]\"\n
+    \         fallback => \"UNKNOWN(%{[sflow][protocol]})\"\n          override =>
+    true\n          refresh_behaviour => \"replace\"\n        }\n      }\n    } else
+    {\n      # sFlow counter samples are dropped.\n      drop { }\n    }\n  }\n}\n"
+  20_filter_90_post_process.logstash.conf: "#------------------------------------------------------------------------------\n#
+    Copyright (C)2020 Robert Cowart\n# \n# The contents of this file and/or repository
+    are subject to the Robert Cowart\n# Public License (the \"License\") and may not
+    be used or distributed except in\n# compliance with the License. You may obtain
+    a copy of the License at:\n# \n# http://www.koiossian.com/public/robert_cowart_public_license.txt\n#
+    \n# Software distributed under the License is distributed on an \"AS IS\" basis,\n#
+    WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for\n#
+    the specific language governing rights and limitations under the License.\n# \n#
+    The Original Source Code was developed by Robert Cowart. Portions created by\n#
+    Robert Cowart are Copyright (C)2020 Robert Cowart. All Rights Reserved.\n#------------------------------------------------------------------------------\n\nfilter
+    {\n  # We now have a normalized flow record. The rest of the logic works regardless
+    of the flow type or version.\n\n  # If IP Version not determined, do CIDR checks
+    as a last attempt.\n    if [network][type] == \"undetermined\" {\n      mutate
+    {\n        remove_field => [ \"[network][type]\" ]\n      }\n      # Determine
+    IP version.\n      if [source][ip] {\n        cidr {\n          address => [ \"%{[source][ip]}\"
+    ]\n          network => [ \"0.0.0.0/0\" ]\n          add_field => { \"[network][type]\"
+    => \"ipv4\" }\n        }\n        if ![network][type] {\n          cidr {\n            address
+    => [ \"%{[source][ip]}\" ]\n            network => [ \"::/0\" ]\n            add_field
+    => { \"[network][type]\" => \"ipv6\" }\n          }\n        }\n      } else if
+    [destination][ip] {\n        cidr {\n          address => [ \"%{[destination][ip]}\"
+    ]\n          network => [ \"0.0.0.0/0\" ]\n          add_field => { \"[network][type]\"
+    => \"ipv4\" }\n        }\n        if ![network][type] {\n          cidr {\n            address
+    => [ \"%{[destination][ip]}\" ]\n            network => [ \"::/0\" ]\n            add_field
+    => { \"[network][type]\" => \"ipv6\" }\n          }\n        }\n      }\n    }\n\n
+    \ # Processing of IP addresses.\n    if [destination][ip] {\n      # Determine
+    if traffic is multicast.\n        cidr {\n          address => [ \"%{[destination][ip]}\"
+    ]\n          network => [ \"224.0.0.0/4\", \"ff00::/8\" ]\n          add_field
+    => { \"[@metadata][isServer]\" => \"dst\" }\n          add_tag => [ \"multicast\"
+    ]\n        }\n      \n      # If localhost then use the IP from the host field.\n
+    \       if [destination][ip] == \"127.0.0.1\" {\n          mutate {\n            replace
+    => { \"[destination][domain]\" => \"%{[host][ip]}\" }\n          }\n        }
+    else {\n          mutate {\n            add_field => { \"[destination][domain]\"
+    => \"%{[destination][ip]}\" }\n          }\n        }\n        \n      # Resolve
+    destination IP address to hostname.\n        if [@metadata][resolve_ip2host] ==
+    \"true\" or [@metadata][resolve_ip2host] == \"endpoints\" {\n          dns {\n
+    \           reverse => [ \"[destination][domain]\" ]\n            action => \"replace\"\n
+    \           nameserver => \"${ELASTIFLOW_NAMESERVER:127.0.0.1}\"\n            hit_cache_size
+    => \"${ELASTIFLOW_DNS_HIT_CACHE_SIZE:25000}\"\n            hit_cache_ttl => \"${ELASTIFLOW_DNS_HIT_CACHE_TTL:900}\"\n
+    \           failed_cache_size => \"${ELASTIFLOW_DNS_FAILED_CACHE_SIZE:75000}\"\n
+    \           failed_cache_ttl => \"${ELASTIFLOW_DNS_FAILED_CACHE_TTL:3600}\"\n
+    \         }\n        }\n    }\n\n    if [source][ip] {\n      # If localhost then
+    use the IP from the host field.\n        if [source][ip] == \"127.0.0.1\" {\n
+    \         mutate {\n            replace => { \"[source][domain]\" => \"%{[host][ip]}\"
+    }\n          }\n        } else {\n          mutate {\n            add_field =>
+    { \"[source][domain]\" => \"%{[source][ip]}\"}\n          }\n        }\n\n      #
+    Resolve source IP address to hostname.\n        if [@metadata][resolve_ip2host]
+    == \"true\" or [@metadata][resolve_ip2host] == \"endpoints\" {\n          dns
+    {\n            reverse => [ \"[source][domain]\" ]\n            action => \"replace\"\n
+    \           nameserver => \"${ELASTIFLOW_NAMESERVER:127.0.0.1}\"\n            hit_cache_size
+    => \"${ELASTIFLOW_DNS_HIT_CACHE_SIZE:25000}\"\n            hit_cache_ttl => \"${ELASTIFLOW_DNS_HIT_CACHE_TTL:900}\"\n
+    \           failed_cache_size => \"${ELASTIFLOW_DNS_FAILED_CACHE_SIZE:75000}\"\n
+    \           failed_cache_ttl => \"${ELASTIFLOW_DNS_FAILED_CACHE_TTL:3600}\"\n
+    \         }\n        }\n    }\n\n  # Determine the locality of the traffic and
+    lookup GeoIP, ASN and IP Reputation information.\n    if [destination][ip] or
+    [source][ip] {\n      mutate {\n        add_field => {\n          \"[event][category]\"
+    => \"network\"\n          \"[event][type]\" => \"connection\"\n        }\n      }\n
+    \     \n      # Initialize traffic_locality to private. This maybe changed to
+    public based on analysis of the source and destination IP addresses below.\n      mutate
+    {\n        add_field => { \"[flow][traffic_locality]\" => \"private\" }\n      }\n\n
+    \     if [destination][ip] {\n        # Check if destination IP address is private.\n
+    \         cidr {\n            address => [ \"%{[destination][ip]}\" ]\n            network
+    => [ \"0.0.0.0/32\", \"10.0.0.0/8\", \"172.16.0.0/12\", \"192.168.0.0/16\", \"198.18.0.0/15\",
+    \"fc00::/7\", \"127.0.0.0/8\", \"::1/128\", \"169.254.0.0/16\", \"fe80::/10\",
+    \"224.0.0.0/4\", \"ff00::/8\", \"255.255.255.255/32\", \"::\", \"192.0.2.0/24\",
+    \"198.51.100.0/24\", \"203.0.113.0/24\", \"2001:db8::/32\" ]\n            add_field
+    => { \"[destination][as][organization][name]\" => \"private\" }\n          }\n\n
+    \       # Check to see if dst_autonomous_system exists. If it doesn't the dst_addr
+    didn't match a private address space and must be public.\n          if ![destination][as][organization][name]
+    {\n            mutate {\n              replace => { \"[flow][traffic_locality]\"
+    => \"public\" }\n            }\n\n            # If enabled lookup destination
+    GeoIP location.\n              if [@metadata][geoip_lookup] == \"true\" {\n                geoip
+    {\n                  source => \"[destination][ip]\"\n                  database
+    => \"${ELASTIFLOW_GEOIP_DB_PATH:/etc/logstash/elastiflow/geoipdbs}/GeoLite2-City.mmdb\"\n
+    \                 cache_size => \"${ELASTIFLOW_GEOIP_CACHE_SIZE:8192}\"\n                  target
+    => \"[metadata][geoip_dst]\"\n                  fields => [ \"city_name\", \"country_name\",
+    \"country_code2\", \"location\" ]\n                }\n                if \"_geoip_lookup_failure\"
+    not in [tags] {\n                  mutate {\n                    rename => {\n
+    \                     \"[metadata][geoip_dst][city_name]\" => \"[destination][geo][city_name]\"\n
+    \                     \"[metadata][geoip_dst][country_name]\" => \"[destination][geo][country_name]\"\n
+    \                     \"[metadata][geoip_dst][country_code2]\" => \"[destination][geo][country_iso_code]\"\n
+    \                     \"[metadata][geoip_dst][location]\" => \"[destination][geo][location]\"\n
+    \                   }\n                  }\n                  if [destination][geo][city_name]
+    {\n                    mutate {\n                      add_field => { \"[geo][city_name]\"
+    => \"%{[destination][geo][city_name]}\" }\n                    }\n                  }\n
+    \                 if [destination][geo][country_name] {\n                    mutate
+    {\n                      add_field => { \"[geo][country_name]\" => \"%{[destination][geo][country_name]}\"
+    }\n                    }\n                  }\n                  if [destination][geo][country_iso_code]
+    {\n                    mutate {\n                      add_field => { \"[geo][country_iso_code]\"
+    => \"%{[destination][geo][country_iso_code]}\" }\n                    }\n                  }\n
+    \               } else {\n                  mutate {\n                    remove_tag
+    => [ \"_geoip_lookup_failure\" ]\n                  }\n                }\n              }\n\n
+    \           # If enabled lookup destination Autonomous System.\n              if
+    [@metadata][asn_lookup] == \"true\" {\n                # Lookup destination Autonomous
+    System.\n                geoip {\n                  source => \"[destination][ip]\"\n
+    \                 database => \"${ELASTIFLOW_GEOIP_DB_PATH:/etc/logstash/elastiflow/geoipdbs}/GeoLite2-ASN.mmdb\"\n
+    \                 cache_size => \"${ELASTIFLOW_GEOIP_CACHE_SIZE:8192}\"\n                  target
+    => \"[metadata][geoip_dst]\"\n                }\n                # Populate dst_autonomous_system.\n
+    \               if \"_geoip_lookup_failure\" not in [tags] {\n                  if
+    [metadata][geoip_dst][as_org] {\n                    mutate {\n                      add_field
+    => { \"[destination][as][organization][name]\" => \"%{[metadata][geoip_dst][as_org]}\"
+    }\n                    }\n                  } else if [metadata][geoip_dst][asn]
+    {\n                    mutate {\n                      add_field => { \"[destination][as][organization][name]\"
+    => \"%{[metadata][geoip_dst][asn]}\" }\n                    }\n                  }
+    else {\n                    mutate {\n                      add_field => { \"[destination][as][organization][name]\"
+    => \"public\" }\n                    }\n                  }\n                  mutate
+    {\n                    rename => { \"[metadata][geoip_dst][asn]\" => \"[destination][as][number]\"
+    }\n                  }\n                } else {\n                  mutate {\n
+    \                   add_field => { \"[destination][as][organization][name]\" =>
+    \"public\" }\n                    remove_tag => [ \"_geoip_lookup_failure\" ]\n
+    \                 }\n                }\n              } else {\n                mutate
+    {\n                  add_field => { \"[destination][as][organization][name]\"
+    => \"public\" }\n                }\n              }\n              mutate {\n
+    \               add_field => {\n                  \"[as][organization][name]\"
+    => \"%{[destination][as][organization][name]}\"\n                }\n              }\n\n
+    \           # Lookup destination IP reputation.\n              # Check if the
+    IP is whitelisted for reputation scoring.\n              translate {\n                dictionary_path
+    => \"${ELASTIFLOW_USER_SETTINGS_PATH:/etc/logstash/elastiflow/user_settings}/ip_rep_whitelist.yml\"\n
+    \               field => \"[destination][ip]\"\n                destination =>
+    \"[@metadata][dst_whitelist]\"\n                fallback => \"false\"\n                refresh_behaviour
+    => \"replace\"\n              }\n              # If not whitelisted, lookup the
+    IP reputation.\n              if [@metadata][dst_whitelist] == \"false\" {\n                translate
+    {\n                  dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/ip_rep_basic.yml\"\n
+    \                 field => \"[destination][ip]\"\n                  destination
+    => \"[@metadata][dst_rep_label]\"\n                  refresh_behaviour => \"replace\"\n
+    \               }\n                # Parse the IP reputation lable into tags.\n
+    \               if [@metadata][dst_rep_label] {\n                  ruby {\n                    init
+    => \"require 'csv'\"\n                    code => \"event.set('[flow][dst_rep_tags]',
+    event.get('[@metadata][dst_rep_label]').parse_csv)\"\n                  }\n                }\n
+    \             }\n          }\n      }\n\n      if [source][ip] {\n        # Check
+    if source IP address is private.\n          cidr {\n            address => [ \"%{[source][ip]}\"
+    ]\n            network => [ \"0.0.0.0/32\", \"10.0.0.0/8\", \"172.16.0.0/12\",
+    \"192.168.0.0/16\", \"198.18.0.0/15\", \"fc00::/7\", \"127.0.0.0/8\", \"::1/128\",
+    \"169.254.0.0/16\", \"fe80::/10\", \"224.0.0.0/4\", \"ff00::/8\", \"255.255.255.255/32\",
+    \"::\", \"192.0.2.0/24\", \"198.51.100.0/24\", \"203.0.113.0/24\", \"2001:db8::/32\"
+    ]\n            add_field => { \"[source][as][organization][name]\" => \"private\"
+    }\n          }\n\n        # Check to see if src_autonomous_system exists. If it
+    doesn't the src_addr didn't match a private address space and locality must be
+    public.\n          if ![source][as][organization][name] {\n            mutate
+    {\n              replace => { \"[flow][traffic_locality]\" => \"public\" }\n            }\n\n
+    \           # If enabled lookup source GeoIP location.\n              if [@metadata][geoip_lookup]
+    == \"true\" {\n                geoip {\n                  source => \"[source][ip]\"\n
+    \                 database => \"${ELASTIFLOW_GEOIP_DB_PATH:/etc/logstash/elastiflow/geoipdbs}/GeoLite2-City.mmdb\"\n
+    \                 cache_size => \"${ELASTIFLOW_GEOIP_CACHE_SIZE:8192}\"\n                  target
+    => \"[metadata][geoip_src]\"\n                  fields => [ \"city_name\", \"country_name\",
+    \"country_code2\", \"location\" ]\n                }\n                if \"_geoip_lookup_failure\"
+    not in [tags] {\n                  mutate {\n                    rename => {\n
+    \                     \"[metadata][geoip_src][city_name]\" => \"[source][geo][city_name]\"\n
+    \                     \"[metadata][geoip_src][country_name]\" => \"[source][geo][country_name]\"\n
+    \                     \"[metadata][geoip_src][country_code2]\" => \"[source][geo][country_iso_code]\"\n
+    \                     \"[metadata][geoip_src][location]\" => \"[source][geo][location]\"\n
+    \                   }\n                  }\n                  if [source][geo][city_name]
+    {\n                    mutate {\n                      add_field => { \"[geo][city_name]\"
+    => \"%{[source][geo][city_name]}\" }\n                    }\n                  }\n
+    \                 if [source][geo][country_name] {\n                    mutate
+    {\n                      add_field => { \"[geo][country_name]\" => \"%{[source][geo][country_name]}\"
+    }\n                    }\n                  }\n                  if [source][geo][country_iso_code]
+    {\n                    mutate {\n                      add_field => { \"[geo][country_iso_code]\"
+    => \"%{[source][geo][country_iso_code]}\" }\n                    }\n                  }\n
+    \               }\n              }\n\n            # If enabled lookup the source
+    Autonomous System.\n              if [@metadata][asn_lookup] == \"true\" {\n                geoip
+    {\n                  source => \"[source][ip]\"\n                  database =>
+    \"${ELASTIFLOW_GEOIP_DB_PATH:/etc/logstash/elastiflow/geoipdbs}/GeoLite2-ASN.mmdb\"\n
+    \                 cache_size => \"${ELASTIFLOW_GEOIP_CACHE_SIZE:8192}\"\n                  target
+    => \"[metadata][geoip_src]\"\n                }\n                # Populate src_autonomous_system.\n
+    \               if \"_geoip_lookup_failure\" not in [tags] {\n                  if
+    [metadata][geoip_src][as_org] {\n                    mutate {\n                      add_field
+    => { \"[source][as][organization][name]\" => \"%{[metadata][geoip_src][as_org]}\"
+    }\n                    }\n                  } else if [metadata][geoip_src][asn]
+    {\n                    mutate {\n                      add_field => { \"[source][as][organization][name]\"
+    => \"%{[metadata][geoip_src][asn]}\" }\n                    }\n                  }
+    else {\n                    mutate {\n                      add_field => { \"[source][as][organization][name]\"
+    => \"public\" }\n                    }\n                  }\n                  mutate
+    {\n                    rename => { \"[metadata][geoip_src][asn]\" => \"[source][as][number]\"
+    }\n                  }\n                } else {\n                  mutate {\n
+    \                   add_field => { \"[source][as][organization][name]\" => \"public\"
+    }\n                    remove_tag => [ \"_geoip_lookup_failure\" ]\n                  }\n
+    \               }\n              } else {\n                mutate {\n                  add_field
+    => { \"[source][as][organization][name]\" => \"public\" }\n                }\n
+    \             }\n              mutate {\n                add_field => {\n                  \"[as][organization][name]\"
+    => \"%{[source][as][organization][name]}\"\n                }\n              }\n
+    \           \n            # Lookup source IP reputation.\n              # Check
+    if the IP is whitelisted for reputation scoring.\n              translate {\n
+    \               dictionary_path => \"${ELASTIFLOW_USER_SETTINGS_PATH:/etc/logstash/elastiflow/user_settings}/ip_rep_whitelist.yml\"\n
+    \               field => \"[source][ip]\"\n                destination => \"[@metadata][src_whitelist]\"\n
+    \               fallback => \"false\"\n                refresh_behaviour => \"replace\"\n
+    \             }\n              # If not whitelisted, lookup the IP reputation.\n
+    \             if [@metadata][src_whitelist] == \"false\" {\n                translate
+    {\n                  dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/ip_rep_basic.yml\"\n
+    \                 field => \"[source][ip]\"\n                  destination =>
+    \"[@metadata][src_rep_label]\"\n                  refresh_behaviour => \"replace\"\n
+    \               }\n                # Parse the IP reputation lable into tags.\n
+    \               if [@metadata][src_rep_label] {\n                  ruby {\n                    init
+    => \"require 'csv'\"\n                    code => \"event.set('[flow][src_rep_tags]',
+    event.get('[@metadata][src_rep_label]').parse_csv)\"\n                  }\n                }\n
+    \             }\n          }\n      }\n\n      # Cleanup any GeoIP lookup failure
+    tag.\n        if \"_geoip_lookup_failure\" in [tags] {\n          mutate {\n            remove_tag
+    => [ \"_geoip_lookup_failure\" ]\n          }\n        }\n\n      # Merge reputation
+    tags.\n        ruby {\n          init => \"require 'csv'\"\n          code =>
+    \"\n            src_tags = event.get('[@metadata][src_rep_label]')\n            dst_tags
+    = event.get('[@metadata][dst_rep_label]')\n\n            if (src_tags)\n              rep_tags
+    = src_tags\n              if (dst_tags)\n                rep_tags = rep_tags <<
+    ',' << dst_tags\n              end\n            else (dst_tags)\n              rep_tags
+    = dst_tags\n            end\n\n            if (rep_tags)\n              event.set('[flow][rep_tags]',
+    rep_tags.parse_csv )\n            end\n          \"\n        }\n    }\n  \n  #
+    IP traffic processing.\n    if [network][iana_number] {\n      # Populate network.transport\n
+    \       translate {\n          dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/iana_protocol_numbers.yml\"\n
+    \         field => \"[network][iana_number]\"\n          destination => \"[network][transport]\"\n
+    \         fallback => \"unknown(%{[network][iana_number]})\"\n          override
+    => true\n          refresh_behaviour => \"replace\"\n        }\n\n      # lookup
+    IANA service name for source and destination ports.\n        if [destination][port]
+    {\n          mutate {\n            add_field => {\n              \"[@metadata][dst_port_key]\"
+    => \"%{[network][iana_number]}:%{[destination][port]}\"\n              \"[@metadata][dst_app_key]\"
+    => \"%{[destination][ip]}:%{[destination][port]}\"\n            }\n            convert
+    => { \"[destination][port]\" => \"integer\" }\n          }\n          translate
+    {\n            dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/iana_service_names.yml\"\n
+    \           field => \"[@metadata][dst_port_key]\"\n            destination =>
+    \"[flow][dst_port_name]\"\n            fallback => \"%{[network][transport]}/%{[destination][port]}\"\n
+    \           refresh_behaviour => \"replace\"\n            add_field => { \"[@metadata][dst_port_key_found]\"
+    => \"true\" }\n          }\n          translate {\n            dictionary_path
+    => \"${ELASTIFLOW_USER_SETTINGS_PATH:/etc/logstash/elastiflow/user_settings}/applications.yml\"\n
+    \           field => \"[@metadata][dst_app_key]\"\n            destination =>
+    \"[network][application]\"\n            override => true\n            refresh_behaviour
+    => \"replace\"\n            add_field => { \"[@metadata][isServer]\" => \"dst\"
+    }\n          }\n        } else {\n          mutate {\n            add_field =>
+    {\n              \"[destination][port]\" => 0\n              \"[flow][dst_port_name]\"
+    => \"%{[network][transport]}/0\"\n            }\n          }\n        }\n\n        if
+    [source][port] {\n          mutate {\n            add_field => {\n              \"[@metadata][src_port_key]\"
+    => \"%{[network][iana_number]}:%{[source][port]}\"\n              \"[@metadata][src_app_key]\"
+    => \"%{[source][ip]}:%{[source][port]}\"\n            }\n            convert =>
+    { \"[source][port]\" => \"integer\" }\n          }\n          translate {\n            dictionary_path
+    => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/iana_service_names.yml\"\n
+    \           field => \"[@metadata][src_port_key]\"\n            destination =>
+    \"[flow][src_port_name]\"\n            fallback => \"%{[network][transport]}/%{[source][port]}\"\n
+    \           refresh_behaviour => \"replace\"\n            add_field => { \"[@metadata][src_port_key_found]\"
+    => \"true\" }\n          }\n          translate {\n            dictionary_path
+    => \"${ELASTIFLOW_USER_SETTINGS_PATH:/etc/logstash/elastiflow/user_settings}/applications.yml\"\n
+    \           field => \"[@metadata][src_app_key]\"\n            destination =>
+    \"[network][application]\"\n            override => true\n            refresh_behaviour
+    => \"replace\"\n            add_field => { \"[@metadata][isServer]\" => \"src\"
+    }\n          }\n        } else {\n          mutate {\n            add_field =>
+    {\n              \"[source][port]\" => 0\n              \"[flow][src_port_name]\"
+    => \"%{[network][transport]}/0\"\n            }\n          }\n        }\n\n      #
+    Determine client and server from source and destination ports.\n        if ![@metadata][isServer]
+    {\n          if [destination][port] and [source][port] {\n            if [flow][tcp_flags]
+    == 2 or [flow][tcp_flags] == 6 {\n              mutate {\n                add_field
+    => { \"[@metadata][isServer]\" => \"dst\" }\n              }\n            } else
+    if [@metadata][src_port_key_found] != \"true\" {\n              if [@metadata][dst_port_key_found]
+    != \"true\" {\n                if [destination][port] <= [source][port] {\n                  mutate
+    {\n                    add_field => { \"[@metadata][isServer]\" => \"dst\" }\n
+    \                 }\n                } else {\n                  mutate {\n                    add_field
+    => { \"[@metadata][isServer]\" => \"src\" }\n                  }\n                }\n
+    \             } else {\n                mutate {\n                  add_field
+    => { \"[@metadata][isServer]\" => \"dst\" }\n                }\n              }\n
+    \           } else {\n              if [@metadata][dst_port_key_found] != \"true\"
+    {\n                mutate {\n                  add_field => { \"[@metadata][isServer]\"
+    => \"src\" }\n                }\n              } else {\n                if [destination][port]
+    <= [source][port] {\n                  mutate {\n                    add_field
+    => { \"[@metadata][isServer]\" => \"dst\" }\n                  }\n                }
+    else {\n                  mutate {\n                    add_field => { \"[@metadata][isServer]\"
+    => \"src\" }\n                  }\n                }\n              }\n            }\n
+    \         }\n        }\n\n      # Set client, server and service fields.\n        if
+    [@metadata][isServer] == \"dst\" {\n          mutate {\n            add_field
+    => {\n              \"[server][ip]\" => \"%{[destination][ip]}\"\n              \"[server][domain]\"
+    => \"%{[destination][domain]}\"\n              \"[server][as][organization][name]\"
+    => \"%{[destination][as][organization][name]}\"\n              \"[flow][service_port]\"
+    => \"%{[destination][port]}\"\n              \"[flow][service_name]\" => \"%{[flow][dst_port_name]}\"\n
+    \             \"[client][ip]\" => \"%{[source][ip]}\"\n              \"[client][domain]\"
+    => \"%{[source][domain]}\"\n              \"[client][as][organization][name]\"
+    => \"%{[source][as][organization][name]}\"\n            }\n          }\n          if
+    [destination][bytes] {\n            mutate {\n              add_field => { \"[server][bytes]\"
+    => \"%{[destination][bytes]}\" }\n            }\n          }\n          if [destination][packets]
+    {\n            mutate {\n              add_field => { \"[server][packets]\" =>
+    \"%{[destination][packets]}\" }\n            }\n          }\n          if [source][bytes]
+    {\n            mutate {\n              add_field => { \"[client][bytes]\" => \"%{[source][bytes]}\"
+    }\n            }\n          }\n          if [source][packets] {\n            mutate
+    {\n              add_field => { \"[client][packets]\" => \"%{[source][packets]}\"
+    }\n            }\n          }\n          if [@metadata][dst_rep_label] {\n            ruby
+    {\n              init => \"require 'csv'\"\n              code => \"event.set('[flow][server_rep_tags]',
+    event.get('[@metadata][dst_rep_label]').parse_csv)\"\n            }\n          }\n
+    \         if [destination][as][organization][name] != \"private\" {\n            if
+    [destination][geo][city_name] {\n              mutate {\n                add_field
+    => { \"[server][geo][city_name]\" => \"%{[destination][geo][city_name]}\" }\n
+    \             }\n            }\n            if [destination][geo][country_name]
+    {\n              mutate {\n                add_field => { \"[server][geo][country_name]\"
+    => \"%{[destination][geo][country_name]}\" }\n              }\n            }\n
+    \           if [destination][geo][country_iso_code] {\n              mutate {\n
+    \               add_field => { \"[server][geo][country_iso_code]\" => \"%{[destination][geo][country_iso_code]}\"
+    }\n              }\n            }\n            if [destination][geo][location]
+    {\n              mutate {\n                add_field => { \"[server][geo][location]\"
+    => \"%{[destination][geo][location][lat]},%{[destination][geo][location][lon]}\"
+    }\n              }\n            }\n            if [destination][as][number] {\n
+    \             mutate {\n                add_field => { \"[server][as][number]\"
+    => \"%{[destination][as][number]}\" }\n              }\n            }\n          }\n
+    \         if [@metadata][src_rep_label] {\n            ruby {\n              init
+    => \"require 'csv'\"\n              code => \"event.set('[flow][client_rep_tags]',
+    event.get('[@metadata][src_rep_label]').parse_csv)\"\n            }\n          }\n
+    \         if [source][as][organization][name] != \"private\" {\n            if
+    [source][geo][city_name] {\n              mutate {\n                add_field
+    => { \"[client][geo][city_name]\" => \"%{[source][geo][city_name]}\" }\n              }\n
+    \           }\n            if [source][geo][country_name] {\n              mutate
+    {\n                add_field => { \"[client][geo][country_name]\" => \"%{[source][geo][country_name]}\"
+    }\n              }\n            }\n            if [source][geo][country_iso_code]
+    {\n              mutate {\n                add_field => { \"[client][geo][country_iso_code]\"
+    => \"%{[source][geo][country_iso_code]}\" }\n              }\n            }\n
+    \           if [source][geo][location] {\n              mutate {\n                add_field
+    => { \"[client][geo][location]\" => \"%{[source][geo][location][lat]},%{[source][geo][location][lon]}\"
+    }\n              }\n            }\n            if [source][as][number] {\n              mutate
+    {\n                add_field => { \"[client][as][number]\" => \"%{[source][as][number]}\"
+    }\n              }\n            }\n          }\n        } else if [@metadata][isServer]
+    == \"src\" {\n          mutate {\n            add_field => {\n              \"[server][ip]\"
+    => \"%{[source][ip]}\"\n              \"[server][domain]\" => \"%{[source][domain]}\"\n
+    \             \"[server][as][organization][name]\" => \"%{[source][as][organization][name]}\"\n
+    \             \"[flow][service_port]\" => \"%{[source][port]}\"\n              \"[flow][service_name]\"
+    => \"%{[flow][src_port_name]}\"\n              \"[client][ip]\" => \"%{[destination][ip]}\"\n
+    \             \"[client][domain]\" => \"%{[destination][domain]}\"\n              \"[client][as][organization][name]\"
+    => \"%{[destination][as][organization][name]}\"\n            }\n          }\n
+    \         if [destination][bytes] {\n            mutate {\n              add_field
+    => { \"[client][bytes]\" => \"%{[destination][bytes]}\" }\n            }\n          }\n
+    \         if [destination][packets] {\n            mutate {\n              add_field
+    => { \"[client][packets]\" => \"%{[destination][packets]}\" }\n            }\n
+    \         }\n          if [source][bytes] {\n            mutate {\n              add_field
+    => { \"[server][bytes]\" => \"%{[source][bytes]}\" }\n            }\n          }\n
+    \         if [source][packets] {\n            mutate {\n              add_field
+    => { \"[server][packets]\" => \"%{[source][packets]}\" }\n            }\n          }\n
+    \         if [@metadata][src_rep_label] {\n            ruby {\n              init
+    => \"require 'csv'\"\n              code => \"event.set('[flow][server_rep_tags]',
+    event.get('[@metadata][src_rep_label]').parse_csv)\"\n            }\n          }\n
+    \         if [destination][as][organization][name] != \"private\" {\n            if
+    [destination][geo][city_name] {\n              mutate {\n                add_field
+    => { \"[client][geo][city_name]\" => \"%{[destination][geo][city_name]}\" }\n
+    \             }\n            }\n            if [destination][geo][country_name]
+    {\n              mutate {\n                add_field => { \"[client][geo][country_name]\"
+    => \"%{[destination][geo][country_name]}\" }\n              }\n            }\n
+    \           if [destination][geo][country_iso_code] {\n              mutate {\n
+    \               add_field => { \"[client][geo][country_iso_code]\" => \"%{[destination][geo][country_iso_code]}\"
+    }\n              }\n            }\n            if [destination][geo][location]
+    {\n              mutate {\n                add_field => { \"[client][geo][location]\"
+    => \"%{[destination][geo][location][lat]},%{[destination][geo][location][lon]}\"
+    }\n              }\n            }\n            if [destination][as][number] {\n
+    \             mutate {\n                add_field => { \"[client][as][number]\"
+    => \"%{[destination][as][number]}\" }\n              }\n            }\n          }\n
+    \         if [@metadata][dst_rep_label] {\n            ruby {\n              init
+    => \"require 'csv'\"\n              code => \"event.set('[flow][client_rep_tags]',
+    event.get('[@metadata][dst_rep_label]').parse_csv)\"\n            }\n          }\n
+    \         if [source][as][organization][name] != \"private\" {\n            if
+    [source][geo][city_name] {\n              mutate {\n                add_field
+    => { \"[server][geo][city_name]\" => \"%{[source][geo][city_name]}\" }\n              }\n
+    \           }\n            if [source][geo][country_name] {\n              mutate
+    {\n                add_field => { \"[server][geo][country_name]\" => \"%{[source][geo][country_name]}\"
+    }\n              }\n            }\n            if [source][geo][country_iso_code]
+    {\n              mutate {\n                add_field => { \"[server][geo][country_iso_code]\"
+    => \"%{[source][geo][country_iso_code]}\" }\n              }\n            }\n
+    \           if [source][geo][location] {\n              mutate {\n                add_field
+    => { \"[server][geo][location]\" => \"%{[source][geo][location][lat]},%{[source][geo][location][lon]}\"
+    }\n              }\n            }\n            if [source][as][number] {\n              mutate
+    {\n                add_field => { \"[server][as][number]\" => \"%{[source][as][number]}\"
+    }\n              }\n            }\n          }\n        }\n    }\n\n  # Process
+    TCP flags.\n    if [flow][tcp_flags] {\n      if [network][transport] == \"tcp\"
+    {\n        if [flow][tcp_flags] > 0 {\n          # Create array of TCP flag tags.\n
+    \         ruby {\n            code => \"\n              flags =[]\n              if
+    event.get('[flow][tcp_flags]').to_i & 1 > 0\n                flags.push('FIN')\n
+    \             end\n              if event.get('[flow][tcp_flags]').to_i & 2 >
+    0\n                flags.push('SYN')\n              end\n              if event.get('[flow][tcp_flags]').to_i
+    & 4 > 0\n                flags.push('RST')\n              end\n              if
+    event.get('[flow][tcp_flags]').to_i & 8 > 0\n                flags.push('PSH')\n
+    \             end\n              if event.get('[flow][tcp_flags]').to_i & 16 >
+    0\n                flags.push('ACK')\n              end\n              if event.get('[flow][tcp_flags]').to_i
+    & 32 > 0\n                flags.push('URG')\n              end\n              if
+    event.get('[flow][tcp_flags]').to_i & 64 > 0\n                flags.push('ECE')\n
+    \             end\n              if event.get('[flow][tcp_flags]').to_i & 128
+    > 0\n                flags.push('CWR')\n              end\n              event.set('[flow][tcp_flags]',
+    flags)\n            \"\n          }\n        } else {\n          mutate {\n            replace
+    => { \"[flow][tcp_flags]\" => \"none\" }\n          }\n        }\n      } else
+    {\n        mutate {\n          remove_field => [ \"[flow][tcp_flags]\" ]\n        }\n
+    \     }\n    }\n\n  # Populate interface names from dictionary if enabled.\n    if
+    [flow][input_snmp] {\n      if [flow][input_snmp] > 100000000 and ([netflow][pan_user]
+    or [ipfix][pan_user]) {\n        ruby {\n          code => \"\n            netif
+    = event.get('[flow][input_snmp]').to_s\n            type = netif[0].to_i.to_s\n
+    \           slot = netif[1..2].to_i.to_s\n            port = netif[3..4].to_i.to_s\n
+    \           virt = netif[5..8].to_i.to_s\n\n            case type\n            when
+    '1'\n              event.set('[flow][input_ifname]', 'Eth' + slot + '/' + port
+    + '.' + virt)\n            when '2'\n              event.set('[flow][input_ifname]',
+    'VLAN' + '.' + virt)\n            when '3'\n              event.set('[flow][input_ifname]',
+    'Loopback' + '.' + virt)\n            when '4'\n              event.set('[flow][input_ifname]',
+    'Tunnel' + '.' + virt)\n            when '5'\n              event.set('[flow][input_ifname]',
+    'AE' + port + '.' + virt)\n            end\n          \"\n        }\n      } else
+    {\n        mutate {\n          add_field => { \"[@metadata][in_if_key]\" => \"%{[host][ip]}::ifName.%{[flow][input_snmp]}\"
+    }\n        }\n        translate {\n          dictionary_path => \"${ELASTIFLOW_USER_SETTINGS_PATH:/etc/logstash/elastiflow/user_settings}/ifName.yml\"\n
+    \         field => \"[@metadata][in_if_key]\"\n          destination => \"[flow][input_ifname]\"\n
+    \         fallback => \"index: %{[flow][input_snmp]}\"\n          refresh_behaviour
+    => \"replace\"\n        }\n      }\n    }\n\n    if [flow][output_snmp] {\n      if
+    [flow][output_snmp] > 100000000 and ([netflow][pan_user] or [ipfix][pan_user])
+    {\n        ruby {\n          code => \"\n            netif = event.get('[flow][output_snmp]').to_s\n
+    \           type = netif[0].to_i.to_s\n            slot = netif[1..2].to_i.to_s\n
+    \           port = netif[3..4].to_i.to_s\n            virt = netif[5..8].to_i.to_s\n\n
+    \           case type\n            when '1'\n              event.set('[flow][output_ifname]',
+    'Eth' + slot + '/' + port + '.' + virt)\n            when '2'\n              event.set('[flow][output_ifname]',
+    'VLAN' + '.' + virt)\n            when '3'\n              event.set('[flow][output_ifname]',
+    'Loopback' + '.' + virt)\n            when '4'\n              event.set('[flow][output_ifname]',
+    'Tunnel' + '.' + virt)\n            when '5'\n              event.set('[flow][output_ifname]',
+    'AE' + port + '.' + virt)\n            end\n          \"\n        }\n      } else
+    {\n        mutate {\n          add_field => { \"[@metadata][out_if_key]\" => \"%{[host][ip]}::ifName.%{[flow][output_snmp]}\"
+    }\n        }\n        translate {\n          dictionary_path => \"${ELASTIFLOW_USER_SETTINGS_PATH:/etc/logstash/elastiflow/user_settings}/ifName.yml\"\n
+    \         field => \"[@metadata][out_if_key]\"\n          destination => \"[flow][output_ifname]\"\n
+    \         fallback => \"index: %{[flow][output_snmp]}\"\n          refresh_behaviour
+    => \"replace\"\n        }\n      }\n    }\n\n  # Populate MAC OUI from dictionary
+    if enabled.\n    if [@metadata][oui_lookup] == \"true\" {\n      if [source][mac]
+    {\n        ruby {\n          code => \"event.set('[metadata][src_oui_key]', event.get('[source][mac]')[0..7])\"\n
+    \       }\n        translate {\n          dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/ieee_oui.yml\"\n
+    \         field => \"[metadata][src_oui_key]\"\n          destination => \"[flow][src_mac_oui]\"\n
+    \         refresh_behaviour => \"replace\"\n        }\n      }\n      if [destination][mac]
+    {\n        ruby {\n          code => \"event.set('[metadata][dst_oui_key]', event.get('[destination][mac]')[0..7])\"\n
+    \       }\n        translate {\n          dictionary_path => \"${ELASTIFLOW_DICT_PATH:/etc/logstash/elastiflow/dictionaries}/ieee_oui.yml\"\n
+    \         field => \"[metadata][dst_oui_key]\"\n          destination => \"[flow][dst_mac_oui]\"\n
+    \         refresh_behaviour => \"replace\"\n        }\n      }\n    }\n\n  # Populate
+    log-related field if enabled.\n    if [@metadata][populate_logs] == \"true\" {\n
+    \     # Set severity.\n        if [flow][rep_tags] {\n          mutate {\n            add_field
+    => {\n              \"[log][level]\" => \"warning\"\n              \"[event][severity]\"
+    => \"4\"\n            }\n          }\n        } else {\n          mutate {\n            add_field
+    => {\n              \"[log][level]\" => \"info\"\n              \"[event][severity]\"
+    => \"6\"\n            }\n          }\n        }\n\n      # Set message.\n        mutate
+    {\n          add_field => { \"[message]\" => \"[ElastiFlow]\" }\n        }\n        if
+    [network][transport] {\n          mutate {\n            replace => { \"[message]\"
+    => \"%{[message]} %{[network][transport]} connection\" }\n          }\n        }\n
+    \       if [source][ip] {\n          mutate {\n            replace => { \"[message]\"
+    => \"%{[message]} from %{[source][ip]}\" }\n          }\n          if [source][port]
+    {\n            mutate {\n              replace => { \"[message]\" => \"%{[message]}:%{[source][port]}\"
+    }\n            }\n          }\n        } else if [source][mac] {\n          mutate
+    {\n            replace => { \"[message]\" => \"%{[message]} from %{[source][mac]}\"
+    }\n          }\n        }\n        if [destination][ip] {\n          mutate {\n
+    \           replace => { \"[message]\" => \"%{[message]} to %{[destination][ip]}\"
+    }\n          }\n          if [destination][port] {\n            mutate {\n              replace
+    => { \"[message]\" => \"%{[message]}:%{[destination][port]}\" }\n            }\n
+    \         }\n        } else if [destination][mac] {\n          mutate {\n            replace
+    => { \"[message]\" => \"%{[message]} to %{[destination][mac]}\" }\n          }\n
+    \       }\n        if [network][bytes] {\n          mutate {\n            replace
+    => { \"[message]\" => \"%{[message]}, %{[network][bytes]} bytes\" }\n          }\n
+    \       }\n        if [network][packets] {\n          mutate {\n            replace
+    => { \"[message]\" => \"%{[message]}, %{[network][packets]} packets\" }\n          }\n
+    \       }\n    }\n\n  # Remove remaining original data if configured not to keep
+    it.\n    if [@metadata][keep_orig_data] == \"false\" {\n      mutate {\n        remove_field
+    => [ \"ipfix\", \"netflow\", \"sflow\" ]\n      }\n    }\n\n  # Cleanup metadata
+    object.\n    mutate {\n      remove_field => [ \"[metadata]\" ]\n    }\n}\n"
+  30_output_10_single.logstash.conf: |+
+    #------------------------------------------------------------------------------
+    # Copyright (C)2020 Robert Cowart
+    #
+    # The contents of this file and/or repository are subject to the Robert Cowart
+    # Public License (the "License") and may not be used or distributed except in
+    # compliance with the License. You may obtain a copy of the License at:
+    #
+    # http://www.koiossian.com/public/robert_cowart_public_license.txt
+    #
+    # Software distributed under the License is distributed on an "AS IS" basis,
+    # WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for
+    # the specific language governing rights and limitations under the License.
+    #
+    # The Original Source Code was developed by Robert Cowart. Portions created by
+    # Robert Cowart are Copyright (C)2020 Robert Cowart. All Rights Reserved.
+    #------------------------------------------------------------------------------
+
+    output {
+      elasticsearch {
+        hosts => [ "${ELASTIFLOW_ES_HOST}" ]
+        ssl => true
+        ssl_certificate_verification => false
+        # If ssl_certificate_verification is true, uncomment cacert and set the path to the certificate.
+        cacert => "/etc/logstash/certs/ca.crt"
+        user => "${ELASTIFLOW_ES_USER:elastic}"
+        password => "${ELASTIFLOW_ES_PASSWD:changeme}"
+        index => "elastiflow-4.0.1-%{+YYYY.MM.dd}"
+        template => "${ELASTIFLOW_TEMPLATE_PATH:/etc/logstash/elastiflow/templates}/elastiflow.template.json"
+        template_name => "elastiflow-4.0.1"
+        template_overwrite => "true"
+      }
+    }

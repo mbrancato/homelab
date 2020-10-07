@@ -1,0 +1,88 @@
+---
+# This sample sets up an Elasticsearch cluster with 3 nodes.
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch
+spec:
+  version: 7.8.0
+  nodeSets:
+  - name: default
+    config:
+      # most Elasticsearch configuration parameters are possible to set, e.g: node.attr.attr_name: attr_value
+      node.master: true
+      node.data: true
+      node.ingest: true
+      node.ml: true
+      # this allows ES to run on nodes even if their vm.max_map_count has not been increased, at a performance cost
+      node.store.allow_mmap: false
+    podTemplate:
+      metadata:
+        labels:
+          # additional labels for pods
+          app: elasticsearch
+      spec:
+        containers:
+        - name: elasticsearch
+          # specify resource limits and requests
+          resources:
+            limits:
+              memory: 4Gi
+              cpu: 1
+          env:
+          - name: ES_JAVA_OPTS
+            value: "-Xms2g -Xmx2g"
+    count: 3
+
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 40Gi
+        storageClassName: rook-ceph-block-slow
+  http:
+   service:
+     spec:
+       type: LoadBalancer
+       loadBalancerIP: 10.47.10.91
+   tls:
+     selfSignedCertificate:
+       subjectAltNames:
+       - dns: elasticsearch.otacnarb.local
+---
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: kibana
+spec:
+  version: 7.8.0
+  count: 1
+  elasticsearchRef:
+    name: elasticsearch
+  http:
+    service:
+      spec:
+        type: LoadBalancer
+        loadBalancerIP: 10.47.10.92
+    tls:
+      selfSignedCertificate:
+        subjectAltNames:
+        - dns: kibana.otacnarb.local
+
+  # this shows how to customize the Kibana pod
+  # with labels and resource limits
+  podTemplate:
+    metadata:
+      labels:
+        foo: bar
+    spec:
+      containers:
+      - name: kibana
+        resources:
+          limits:
+            memory: 1Gi
+            cpu: 1

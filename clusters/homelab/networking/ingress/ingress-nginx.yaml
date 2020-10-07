@@ -283,6 +283,7 @@ metadata:
   namespace: ingress-nginx
 spec:
   type: LoadBalancer
+  loadBalancerIP: 10.47.10.90
   externalTrafficPolicy: Local
   ports:
     - name: http

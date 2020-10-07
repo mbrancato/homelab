@@ -1,0 +1,53 @@
+---
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: fry-disk
+spec:
+  source:
+      http:
+         url: "http://10.47.10.12:8000/fry-20201004.qcow2"
+  pvc:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: "36Gi"
+    storageClassName: rook-ceph-block-slow
+
+---
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: fry
+spec:
+  running: false
+  template:
+    metadata:
+      labels:
+        kubevirt.io/domain: fry
+    spec:
+      domain:
+        cpu:
+          cores: 1
+        devices:
+          disks:
+          - disk:
+              bus: sata
+            name: harddrive
+          interfaces:
+            - name: eth0
+              bridge: { }
+              model: "e1000"
+              macAddress: ce:5b:b1:d3:5b:a5
+        resources:
+          requests:
+            memory: 2G
+      networks:
+        - name: eth0
+          multus:
+            networkName: general-vlan
+      volumes:
+      - name: harddrive
+        dataVolume:
+          name: fry-disk

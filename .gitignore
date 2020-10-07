@@ -2,7 +2,13 @@
 *.iso
 *.key
 *.crt
+lab.yml
 bootstrap/lab/*
 automate/lab/*
 **/Pipfile*
 **/package-lock.json
+
+**/roles/k3s/
+**/roles/kubevirt/
+
+__pycache__/

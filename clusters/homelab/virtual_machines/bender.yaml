@@ -1,0 +1,52 @@
+---
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: bender-disk
+spec:
+  source:
+      http:
+         url: "http://10.47.10.12:8000/bender-20201004.qcow2"
+  pvc:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: "36Gi"
+    storageClassName: rook-ceph-block-slow
+
+---
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: bender
+spec:
+  running: false
+  template:
+    metadata:
+      labels:
+        kubevirt.io/domain: bender
+    spec:
+      domain:
+        cpu:
+          cores: 1
+        devices:
+          disks:
+          - disk:
+              bus: virtio
+            name: harddrive
+          interfaces:
+            - name: eth0
+              bridge: { }
+              macAddress: 02:00:00:3a:33:a2
+        resources:
+          requests:
+            memory: 4G
+      networks:
+        - name: eth0
+          multus:
+            networkName: general-vlan
+      volumes:
+      - name: harddrive
+        dataVolume:
+          name: bender-disk

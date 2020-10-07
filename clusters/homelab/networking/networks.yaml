@@ -1,0 +1,67 @@
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: general-vlan
+spec:
+  config: |
+    {
+            "cniVersion": "0.4.0",
+            "name": "vlan10",
+            "type": "bridge",
+            "bridge": "br0",
+            "ipam": {},
+            "isDefaultGateway": true,
+            "hairpinMode": true,
+            "vlan": 10
+    }
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: general-vlan-dhcp
+  namespace: kube-system
+spec:
+  config: |
+    {
+            "cniVersion": "0.4.0",
+            "name": "vlan10-dhcp",
+            "plugins": [
+              {
+                "type": "macvlan",
+                "master": "br0.10",
+                "ipam": {
+                  "type": "dhcp",
+                  "dns": {
+                    "nameservers": ["10.47.10.1"],
+                    "domain": "otacnarb.local",
+                    "search": ["otacnarb.local"]
+                  }
+                }
+              },
+              {"type": "tuning"}
+            ]
+    }
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: general-vlan-static
+  namespace: kube-system
+spec:
+  config: |
+    {
+            "cniVersion": "0.4.0",
+            "name": "vlan10-static",
+            "plugins": [
+              {
+                "type": "macvlan",
+                "master": "br0.10",
+                "ipam": {
+                  "type": "static",
+                  "gateway": "10.47.10.1"
+                }
+              },
+              {"type": "tuning"}
+            ]
+    }

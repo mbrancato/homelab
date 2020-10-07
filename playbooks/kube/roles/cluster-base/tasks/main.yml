@@ -1,0 +1,11 @@
+---
+- name: Set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+  register: set_hostname
+
+- name: Set authorized key for user
+  authorized_key:
+    user: "{{ ansible_facts.env['SUDO_USER'] }}"
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"

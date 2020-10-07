@@ -1,0 +1,21 @@
+lab:
+  hosts:
+    node-0:
+      ansible_host: 10.10.10.120
+      hostname: node-0
+    node-1:
+      ansible_host: 10.10.10.121
+      hostname: node-1
+    node-2:
+      ansible_host: 10.10.10.122
+      hostname: node-2
+  vars:
+    network_mask: 255.255.255.0
+    network_gateway: 10.10.10.1
+    domain: homelab.local
+    stor0: ens40
+    stor1: ens41
+    eth0: ens33
+    eth1: ens37
+    eth2: ens38
+    eth3: ens39

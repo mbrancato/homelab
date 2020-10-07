@@ -1,0 +1,175 @@
+---
+- name: Remove Proxmox
+  hosts: lab
+  become: true
+  gather_facts: true
+  vars:
+    ansible_python_interpreter: "/usr/bin/env python"
+
+  tasks:
+  - name: Stop Proxmox services
+    systemd:
+      name: "{{ item }}"
+      state: stopped
+    ignore_errors: yes
+    with_items:
+      - pve-cluster.service
+      - pve-ha-lrm.service
+      - pvestatd.service
+      - pveproxy.service
+      - pvedaemon.service
+      - pvefw-logger.service
+      - pve-ha-crm.service
+      - pve-firewall.service
+      - lxc-monitord.service
+      - lxcfs.service
+      - corosync.service
+      - iscsid.service
+      - zfs-zed.service
+      - system-ceph\x2dosd.slice
+      - system-ceph\x2dmon.slice
+      - system-ceph\x2dmds.slice
+      - system-ceph\x2dmgr.slice
+
+
+  - name: Touch file
+    file:
+      path: /please-remove-proxmox-ve
+      state: touch
+
+  - name: Uninstall ceph packages
+    apt:
+      name:
+      - ceph
+      - ceph-base
+      - ceph-common
+      - ceph-fuse
+      - ceph-mds
+      - ceph-mgr
+      - ceph-mon
+      - ceph-osd
+      - libcephfs2
+      - librados2
+      - libradosstriper1
+      - librbd1
+      - librgw2
+      - python-cephfs
+      - python-rados
+      - python-rbd
+      - python-rgw
+      - zfsutils-linux
+      state: absent
+
+  - name: Fix missing hook
+    shell: |
+      mkdir -p /usr/share/proxmox-ve/
+      touch /usr/share/proxmox-ve/pve-apt-hook
+      chmod 755 /usr/share/proxmox-ve/pve-apt-hook
+
+
+  - name: Uninstall Proxmox VE
+    apt:
+      name:
+      - proxmox-ve
+      - postfix
+      - open-iscsi
+      - pve-firmware
+      - pve-kernel-4.15
+      - pve-kernel-4.15.18-15-pve
+      - pve-kernel-4.15.18-16-pve
+      - nfs-common
+      - rpcbind
+      state: absent
+
+  - name: Autoremove
+    apt:
+      autoremove: yes
+
+  - name: Purging remaining packages
+    shell: apt-get remove -y --purge $(dpkg -l | grep "^rc" | awk '{print $2}')
+
+  - name: Unmount cephFS
+    shell: umount --force /mnt/pve/cephfs
+    ignore_errors: yes
+
+  - name: Remove Proxmox repo key
+    file:
+      path: /etc/apt/trusted.gpg.d/proxmox-ve-release-5.x.gpg
+      state: absent
+
+  - name: Remove Proxmox package repo
+    apt_repository:
+      repo: 'deb http://download.proxmox.com/debian/pve stretch pve-no-subscription'
+      state: absent
+      update_cache: no
+
+  - name: Remove remaining PVE config
+    file:
+      path: "{{ item }}"
+      state: absent
+    ignore_errors: yes
+    with_items:
+      - /etc/apt/sources.list.d/pve-enterprise.list
+      - /etc/apt/sources.list.d/download_proxmox_com_debian_pve.list
+      - /etc/apt/apt.conf.d/10pveapthook
+      - /etc/apt/apt.conf.d/75pveconf
+      - /etc/apt/apt.conf.d/76pveproxy
+      - /etc/pve/
+      - /var/lib/vz/
+      - /etc/systemd/system/ceph-mgr.target.wants
+      - /etc/systemd/system/ceph-mon.target.wants
+      - /etc/systemd/system/ceph-osd.target.wants
+      - /run/ceph
+      - /etc/apt/sources.list.d/ceph.list
+      - /etc/rc5.d/S01ceph
+      - /etc/rc6.d/K01ceph
+      - /etc/rc0.d/K01ceph
+      - /etc/rc1.d/K01ceph
+      - /etc/rc3.d/S01ceph
+      - /etc/rc4.d/S01ceph
+      - /etc/rc2.d/S01ceph
+      - /var/lib/lxc/
+      - /etc/apparmor.d/local/lxc-containers
+      - /etc/apparmor.d/local/usr.bin.lxc-start
+      - /etc/apparmor.d/cache/lxc-containers
+      - /etc/apparmor.d/cache/usr.bin.lxc-start
+      - /etc/systemd/system/multi-user.target.wants/lxc.service
+      - /etc/systemd/system/multi-user.target.wants/lxc-monitord.service
+      - /etc/systemd/system/multi-user.target.wants/lxc-net.service
+      - /var/cache/lxc/apparmor/
+      - /var/lib/systemd/deb-systemd-helper-enabled/lxc-monitord.service.dsh-also
+      - /var/lib/systemd/deb-systemd-helper-enabled/lxc-net.service.dsh-also
+      - /var/lib/systemd/deb-systemd-helper-enabled/multi-user.target.wants/lxc.service
+      - /var/lib/systemd/deb-systemd-helper-enabled/multi-user.target.wants/lxc-monitord.service
+      - /var/lib/systemd/deb-systemd-helper-enabled/multi-user.target.wants/lxc-net.service
+      - /var/lib/systemd/deb-systemd-helper-enabled/lxc.service.dsh-also
+      - /var/log/lxc/
+      - /var/cache/lxc/
+      - /etc/systemd/system/ceph*
+      - /etc/motd
+      - /var/lib/ceph
+      - /please-remove-proxmox-ve
+
+  - name: Replace GRUB message
+    lineinfile:
+      path: /etc/default/grub
+      regexp: '^GRUB_DISTRIBUTOR='
+      line: GRUB_DISTRIBUTOR="Debian"
+
+  - name: Fix /etc/issue
+    copy:
+      content: "Debian GNU/Linux \\n \\l\n\n"
+      dest: /etc/issue
+
+  - name: Update GRUB
+    shell: update-grub
+
+  - name: Upgrade remaining packages
+    apt:
+      upgrade: yes
+      update_cache: yes
+
+  - name: Ensure networking is enabled
+    systemd:
+      name: networking
+      enabled: yes

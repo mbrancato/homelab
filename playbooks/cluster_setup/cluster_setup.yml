@@ -1,0 +1,114 @@
+---
+- name: OS Setup
+  hosts: lab
+  become: true
+  gather_facts: true
+  vars:
+    ansible_python_interpreter: "/usr/bin/env python"
+
+  tasks:
+  # Update /etc/hosts before updating the hostname
+  - name: Setup the hosts file
+    template:
+      src: hosts.j2
+      dest: /etc/hosts
+
+  - name: Set hostname
+    hostname:
+      name: '{{ hostname }}'
+
+  - name: Update Debian
+    apt:
+      update_cache: yes
+
+  - name: Install required packages
+    apt:
+      name:
+      - unattended-upgrades
+      - ntp
+      - apt-transport-https
+      - ifupdown2
+      - ntp
+      - ca-certificates
+      state: present
+
+  - name: Setup networking
+    template:
+      src: interfaces.j2
+      dest: /etc/network/interfaces
+
+  - name: Setup DNS
+    template:
+      src: resolv.conf.j2
+      dest: /etc/resolv.conf
+
+  - name: Load the bonding module
+    modprobe:
+      name: bonding
+
+  - name: Add bonding to load on startup
+    lineinfile:
+      path: /etc/modules
+      state: present
+      line: 'bonding'
+
+  - name: Load the bonding module
+    modprobe:
+      name: '8021q'
+
+  - name: Add bonding to load on startup
+    lineinfile:
+      path: /etc/modules
+      state: present
+      line: '8021q'
+
+#- name: Install Filebeat
+#  hosts: loggers
+#  become: true
+#  gather_facts: true
+#  vars:
+#    ansible_python_interpreter: "/usr/bin/env python"
+#
+#  tasks:
+#  - name: Fetch Elastic apt repo key
+#    apt_key:
+#      id: D88E42B4
+#      url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+#      state: present
+#
+#  - name: Add Elastic apt repo
+#    apt_repository:
+#      repo: deb https://artifacts.elastic.co/packages/7.x/apt stable main
+#      state: present
+#
+#  - name: Update Debian
+#    apt:
+#      update_cache: yes
+#
+#  - name: Install Filebeat
+#    apt:
+#      name:
+#      - filebeat
+#      state: present
+#
+#  - name: Setup filebeat
+#    template:
+#      src: filebeat.yml.j2
+#      dest: /etc/hosts
+#      mode: '0644'
+#
+#  - name: Copy rsyslog filebeat config
+#    copy:
+#      src: filebeat-localhost.conf
+#      dest: /etc/rsyslog.d/
+#      mode: '0644'
+#
+#  - name: Restart filebeat
+#    systemd:
+#      state: restarted
+#      name: filebeat.service
+#
+#  - name: Restart rsyslog
+#    systemd:
+#      state: restarted
+#      name: rsyslog.service

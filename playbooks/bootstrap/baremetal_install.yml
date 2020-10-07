@@ -4,7 +4,7 @@
   become: false
   gather_facts: false
   vars:
-    debian_base_iso: debian-9.9.0-amd64-netinst.iso
+    debian_base_iso: debian-10.6.0-amd64-netinst.iso
     ansible_python_interpreter: "/usr/bin/env python"
 
   pre_tasks:

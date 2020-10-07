@@ -38,7 +38,7 @@ dd if="$orig_iso" bs=1 count=432 of="$mbr_template"
 
 # Create the new ISO image
 xorriso -as mkisofs \
-   -r -V 'Debian 9.9.0 amd64 n' \
+   -r -V 'Debian 10.6.0 amd64 n' \
    -o "$new_iso" \
    -J -J -joliet-long -cache-inodes \
    -isohybrid-mbr "$mbr_template" \

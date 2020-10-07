@@ -1,0 +1,43 @@
+---
+- name: Ensure Python3 is installed
+  hosts: all
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Check for Python3
+    raw: test -e /usr/bin/python3
+    changed_when: false
+    failed_when: false
+    register: check_python
+  - name: Install Python
+    raw: apt -y update && apt install -y python3
+    when: check_python.rc | bool
+
+- name: Homelab cluster Kubernetes setup
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    ansible_python_interpreter: "/usr/bin/env python3"
+
+  roles:
+  - name: cluster-base
+  - name: haproxy
+    vars:
+      haproxy_backend_servers: "{{ hostvars[inventory_hostname].groups.all | to_backend }}"
+      haproxy_frontend_name: 'hafrontend'
+      haproxy_frontend_bind_address: '*'
+      haproxy_frontend_port: 7443
+      haproxy_frontend_mode: 'tcp'
+      haproxy_backend_name: 'habackend'
+      haproxy_backend_mode: 'tcp'
+      haproxy_backend_balance_method: 'roundrobin'
+      haproxy_backend_httpchk: ''
+
+  - name: kubeadm
+    vars:
+      kube_custom_cni: yes
+      kube_version: '1.18.1'
+
+  - name: kubevirt

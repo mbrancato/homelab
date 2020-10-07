@@ -141,7 +141,7 @@ spec:
           medium: Memory
       containers:
         - name: flux
-          image: "docker.io/fluxcd/flux:1.21.1"
+          image: "docker.io/fluxcd/flux:1.21.0"
           imagePullPolicy: IfNotPresent
           ports:
           - name: http

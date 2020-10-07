@@ -21,7 +21,7 @@ kind: VirtualMachine
 metadata:
   name: fry
 spec:
-  running: false
+  runStrategy: RerunOnFailure
   template:
     metadata:
       labels:

@@ -21,7 +21,7 @@ kind: VirtualMachine
 metadata:
   name: bender
 spec:
-  running: false
+  runStrategy: Manual
   template:
     metadata:
       labels:

@@ -1,0 +1,26 @@
+---
+- name: Zap disk
+  hosts: lab
+  become: true
+  gather_facts: true
+  vars:
+    ansible_python_interpreter: "/usr/bin/env python3"
+
+  tasks:
+  - name: Install required packages
+    apt:
+      name:
+      - gdisk
+
+  - name: Zap disk
+    shell: |
+      DISK={{ disk }}
+      sgdisk --zap-all $DISK
+      {% if ssd %}
+      blkdiscard $DISK
+      {% else %}
+      dd if=/dev/zero of="$DISK" bs=1M count=100 oflag=direct,dsync
+      {% endif %}
+
+      ls /dev/mapper/ceph-* | xargs -I% -- dmsetup remove %
+      rm -rf /dev/ceph-*

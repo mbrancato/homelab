@@ -41,3 +41,13 @@
       kube_version: '1.18.1'
 
   - name: kubevirt
+
+  tasks:
+  - name: Create local volume folders
+    file:
+      path: /mnt/disks/{{ item }}
+      state: directory
+    with_items:
+      - root_vol0
+      - root_vol1
+      - root_vol2

@@ -58,8 +58,7 @@ spec:
                 "type": "macvlan",
                 "master": "br0.10",
                 "ipam": {
-                  "type": "static",
-                  "gateway": "10.47.10.1"
+                  "type": "static"
                 }
               },
               {"type": "tuning"}

@@ -28,7 +28,7 @@ spec:
   template:
     metadata:
       annotations:
-        v1.multus-cni.io/default-network: '[{"mac":"ca:b8:b9:05:79:f5","name":"general-vlan-static","namespace":"kube-system","ips":["10.47.10.14/24"]}]'
+        v1.multus-cni.io/default-network: '[{"mac":"ca:b8:b9:05:79:f5","name":"general-vlan-static","namespace":"kube-system","ips":["10.47.10.14/24"],"default-route":["10.47.10.1"]}]'
       creationTimestamp: null
       labels:
         app: unifi

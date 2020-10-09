@@ -32,7 +32,7 @@ spec:
           env:
           - name: ES_JAVA_OPTS
             value: "-Xms2g -Xmx2g"
-    count: 3
+    count: 2
 
     volumeClaimTemplates:
     - metadata:

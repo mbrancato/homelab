@@ -32,7 +32,7 @@ spec:
           env:
           - name: ES_JAVA_OPTS
             value: "-Xms2g -Xmx2g"
-    count: 2
+    count: 3
 
     volumeClaimTemplates:
     - metadata:
@@ -42,8 +42,8 @@ spec:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 40Gi
-        storageClassName: rook-ceph-block-slow
+            storage: 20Gi
+        storageClassName: local-storage
   http:
    service:
      spec:

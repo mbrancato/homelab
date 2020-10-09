@@ -5,7 +5,7 @@ kind: Elasticsearch
 metadata:
   name: elasticsearch
 spec:
-  version: 7.8.0
+  version: 7.9.2
   nodeSets:
   - name: default
     config:
@@ -59,7 +59,7 @@ kind: Kibana
 metadata:
   name: kibana
 spec:
-  version: 7.8.0
+  version: 7.9.2
   count: 1
   elasticsearchRef:
     name: elasticsearch

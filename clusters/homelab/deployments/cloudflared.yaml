@@ -1,0 +1,78 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared-config
+  namespace: default
+data:
+  config.yml: |
+    proxy-dns: true
+    proxy-dns-upstream:
+     - https://1.1.1.1/dns-query
+     - https://1.0.0.1/dns-query
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: cloudflared
+  name: cloudflared
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudflared
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        v1.multus-cni.io/default-network: '[{"mac":"ca:b8:b9:4e:25:a3","name":"general-vlan-static","namespace":"kube-system","ips":["10.47.10.6/24"],"default-route":["10.47.10.1"]}]'
+      labels:
+        app: cloudflared
+    spec:
+      containers:
+      - image: cloudflare/cloudflared:2020.12.0@sha256:eb7ea4b86dd18aaff2038dc98ec4e708417900345ef003085c27f8ea3d9cf98a
+        name: cloudflared
+        args:
+          - proxy-dns
+          - --address
+          - 0.0.0.0
+          - --metrics
+          - 0.0.0.0:8080
+        ports:
+          - containerPort: 53
+            name: dns
+            protocol: UDP
+          - containerPort: 53
+            name: dns-tcp
+            protocol: TCP
+          - containerPort: 8080
+            name: metrics
+            protocol: TCP
+        resources:
+          limits:
+            memory: 768Mi
+          requests:
+            cpu: 100m
+            memory: 256Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+              - NET_BIND_SERVICE
+            drop:
+              - all
+          readOnlyRootFilesystem: true
+          # Cloudflared will refuse to bind without forced runAs root's UID
+          runAsUser: 0
+        volumeMounts:
+          - name: config
+            mountPath: /usr/local/etc/cloudflared/
+            readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: cloudflared-config

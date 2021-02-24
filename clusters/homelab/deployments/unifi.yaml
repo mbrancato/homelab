@@ -44,7 +44,8 @@ spec:
         nameservers:
           - "10.47.10.1"
       containers:
-      - image: jacobalberty/unifi@sha256:af5c0e88a0f08377d5bd17750d16bb7b90ca47060d7eec254312b0dd7ebd293a
+      # jacobalberty/unifi:6.0.45
+      - image: jacobalberty/unifi@sha256:2d55cbf81778da2d34720ed510143f7be5a1dbc95868da20331183e4a57ba753
         name: unifi
         resources: {}
         volumeMounts:

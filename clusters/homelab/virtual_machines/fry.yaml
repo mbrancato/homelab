@@ -12,7 +12,7 @@ spec:
       - ReadWriteOnce
     resources:
       requests:
-        storage: "36Gi"
+        storage: "37Gi"
     storageClassName: rook-ceph-block-slow
 
 ---
@@ -32,6 +32,10 @@ spec:
           cores: 1
         devices:
           disks:
+#          - bootOrder: 1
+#            cdrom:
+#              bus: sata
+#            name: cdromiso
           - disk:
               bus: sata
             name: harddrive
@@ -48,6 +52,9 @@ spec:
           multus:
             networkName: general-vlan
       volumes:
+#      - name: cdromiso
+#        dataVolume:
+#          name: boot-repair-iso
       - name: harddrive
         dataVolume:
           name: fry-disk

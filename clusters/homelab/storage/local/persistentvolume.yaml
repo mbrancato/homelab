@@ -9,7 +9,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
     path: /mnt/disks/root_vol0
@@ -32,7 +32,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
     path: /mnt/disks/root_vol1
@@ -55,10 +55,33 @@ spec:
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
     path: /mnt/disks/root_vol2
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - homelab-0
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: root-vol3-homelab-0
+spec:
+  capacity:
+    storage: 40Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /mnt/disks/root_vol3
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -78,7 +101,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
     path: /mnt/disks/root_vol0
@@ -101,7 +124,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
     path: /mnt/disks/root_vol1
@@ -124,10 +147,33 @@ spec:
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
     path: /mnt/disks/root_vol2
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - homelab-1
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: root-vol3-homelab-1
+spec:
+  capacity:
+    storage: 40Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /mnt/disks/root_vol3
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -147,7 +193,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
     path: /mnt/disks/root_vol0
@@ -170,7 +216,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
     path: /mnt/disks/root_vol1
@@ -193,10 +239,33 @@ spec:
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
     path: /mnt/disks/root_vol2
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - homelab-2
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: root-vol3-homelab-2
+spec:
+  capacity:
+    storage: 40Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /mnt/disks/root_vol3
   nodeAffinity:
     required:
       nodeSelectorTerms:

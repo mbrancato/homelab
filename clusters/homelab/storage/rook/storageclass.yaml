@@ -77,6 +77,8 @@ parameters:
 #mounter: rbd-nbd
 allowVolumeExpansion: true
 reclaimPolicy: Delete
+mountOptions:
+  - debug
 
 ---
 apiVersion: storage.k8s.io/v1
@@ -123,3 +125,5 @@ parameters:
 #mounter: rbd-nbd
 allowVolumeExpansion: true
 reclaimPolicy: Delete
+mountOptions:
+  - debug

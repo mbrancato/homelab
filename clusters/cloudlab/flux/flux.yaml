@@ -1,0 +1,25 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cloudlab
+  namespace: flux-system
+spec:
+  interval: 2m
+  path: "./clusters/cloudlab"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: homelab
+#    validation: client
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: homelab
+  namespace: flux-system
+spec:
+  interval: 2m
+  ref:
+    branch: master
+  url: https://github.com/mbrancato/homelab
